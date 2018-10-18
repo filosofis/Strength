@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "267421325768",
+    "firebase_url": "https://strengthapp-c15c4.firebaseio.com",
+    "project_id": "strengthapp-c15c4",
+    "storage_bucket": "strengthapp-c15c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267421325768:android:c6a328017e9dd4ae",
+        "android_client_info": {
+          "package_name": "com.lundqvist.oscar.strength"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "267421325768-l7v1nku0km2ubfhsj1ou1422iiojjanv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lundqvist.oscar.strength",
+            "certificate_hash": "3c65a68b2759704f4ceda16266b8814980aa3934"
+          }
+        },
+        {
+          "client_id": "267421325768-qrhmre3hm1696pqpshvfcdipdj8f6jef.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAINXMDd_ymviv_0nb2mLJMG3NgQI7twnA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "267421325768-qrhmre3hm1696pqpshvfcdipdj8f6jef.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
