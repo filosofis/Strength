@@ -1,6 +1,4 @@
 package com.lundqvist.oscar.strength.ui;
-
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;

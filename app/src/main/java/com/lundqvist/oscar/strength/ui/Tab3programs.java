@@ -46,7 +46,7 @@ public class Tab3programs extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         rootRef = FirebaseDatabase.getInstance().getReference();
-        programsRef = rootRef.child("programs");
+        programsRef = rootRef.child("programs-menu");
 
         System.out.println("Create View");
         return rootView;

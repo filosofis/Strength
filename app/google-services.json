@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "267421325768-crkgh4bp0kqjirrvfcp6p8md8qt73s5v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lundqvist.oscar.strength",
+            "certificate_hash": "1c91b046734ebcdb58b25ae55e1f9b1d8f5ad424"
+          }
+        },
+        {
           "client_id": "267421325768-qrhmre3hm1696pqpshvfcdipdj8f6jef.apps.googleusercontent.com",
           "client_type": 3
         }
