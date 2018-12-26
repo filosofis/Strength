@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,7 +27,7 @@ import timber.log.Timber;
  * Created by Oscar on 2018-01-27.
  */
 
-public class Tab3programs extends Fragment {
+public class Tab3programs extends Fragment{
     private DatabaseReference rootRef;
     private DatabaseReference programsRef;
     private ValueEventListener mPostListener;
@@ -63,10 +64,15 @@ public class Tab3programs extends Fragment {
                 Program program;
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                     program = ds.getValue(Program.class);
-                    System.out.println(program.toString());
+                    //System.out.println(program.toString());
                     programArrayList.add(program);
                 }
-                adapter = new ProgramsAdapter(programArrayList);
+                adapter = new ProgramsAdapter(programArrayList, new ItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        System.out.println("Position" + position);
+                    }
+                });
                 recyclerView.setAdapter(adapter);
             }
 
@@ -81,12 +87,11 @@ public class Tab3programs extends Fragment {
         };
         programsRef.addValueEventListener(postListener);
         mPostListener = postListener;
-
     }
+
     @Override
     public void onStop() {
         super.onStop();
-
         // Remove post value event listener
         if (mPostListener != null) {
             rootRef.removeEventListener(mPostListener);

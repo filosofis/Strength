@@ -26,6 +26,8 @@ public class WorkoutDbHelper extends SQLiteOpenHelper {
                 ExerciseEntry.COLUMN_WEIGHT + " INTEGER, " +
                 ExerciseEntry.COLUMN_SETS + " INTEGER NOT NULL, " +
                 ExerciseEntry.COLUMN_REPS + " INTEGER NOT NULL, " +
+                ExerciseEntry.COLUMN_TIME + " INTEGER NOT NULL, " +
+                ExerciseEntry.COLUMN_NOTE + " TEXT NOT NULL, " +
                 ExerciseEntry.COLUMN_WORKOUT + "INTEGER NOT NULL)";
         db.execSQL(SQL_CREATE_EXERCISE_TABLE);
     }

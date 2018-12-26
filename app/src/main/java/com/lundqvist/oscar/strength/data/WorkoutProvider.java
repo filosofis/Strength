@@ -78,7 +78,26 @@ public class WorkoutProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
+        final SQLiteDatabase db = wDbHelper.getReadableDatabase();
+        db.insertOrThrow(Contract.ExerciseEntry.TABLE_NAME, null, values);
         return null;
+    }
+
+    @Override
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+        final SQLiteDatabase db = wDbHelper.getReadableDatabase();
+        db.beginTransaction();
+        int returnCount = 0;
+        try{
+            for(ContentValues value : values){
+                db.insert(Contract.ExerciseEntry.TABLE_NAME, null, value);
+                returnCount++;
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        return returnCount;
     }
 
     @Override

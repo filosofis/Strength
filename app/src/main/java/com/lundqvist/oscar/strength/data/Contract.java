@@ -24,6 +24,8 @@ public class Contract {
         public static final String COLUMN_SETS = "sets";
         public static final String COLUMN_REPS = "reps";
         public static final String COLUMN_WORKOUT = "workout";
+        public static final String COLUMN_TIME = "time";
+        public static final String COLUMN_NOTE = "note";
     }
 
     static String getWorkoutFromUri(Uri queryUri){

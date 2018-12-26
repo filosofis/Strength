@@ -18,15 +18,21 @@ import java.util.ArrayList;
 public class ProgramsAdapter extends RecyclerView.Adapter<ProgramsAdapter.ViewHolder> {
     private ArrayList<Program> programArrayList;
 
-    public ProgramsAdapter(ArrayList<Program> programArrayList) {
+    public ItemClickListener clickListener;
+
+
+    public ProgramsAdapter(ArrayList<Program> programArrayList, ItemClickListener clickListener) {
         this.programArrayList = programArrayList;
+        this.clickListener = clickListener;
     }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         private TextView titleView;
         private TextView durationView;
         private TextView authorView;
         private TextView descriptionView;
+
         private ViewHolder(View itemView) {
             super(itemView);
             titleView = itemView.findViewById(R.id.title);
@@ -34,14 +40,21 @@ public class ProgramsAdapter extends RecyclerView.Adapter<ProgramsAdapter.ViewHo
             authorView = itemView.findViewById(R.id.author);
             descriptionView = itemView.findViewById(R.id.description);
         }
+
     }
     @Override
-    public void onBindViewHolder(ProgramsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ProgramsAdapter.ViewHolder holder, final int position) {
         Program program = programArrayList.get(position);
         holder.titleView.setText(program.getTitle());
         holder.authorView.setText(program.getAuthor());
         holder.durationView.setText(String.valueOf(program.getDuration()));
         holder.descriptionView.setText(program.getDescription());
+        holder.itemView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                clickListener.onItemClick(position);
+            }
+        });
     }
 
     @Override
