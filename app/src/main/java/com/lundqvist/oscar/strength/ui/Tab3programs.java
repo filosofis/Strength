@@ -1,11 +1,17 @@
 package com.lundqvist.oscar.strength.ui;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lundqvist.oscar.strength.R;
+import com.lundqvist.oscar.strength.data.Contract;
+import com.lundqvist.oscar.strength.model.Exercise;
 import com.lundqvist.oscar.strength.model.Program;
 
 import java.util.ArrayList;
@@ -30,6 +38,7 @@ import timber.log.Timber;
 public class Tab3programs extends Fragment{
     private DatabaseReference rootRef;
     private DatabaseReference programsRef;
+    private DatabaseReference programDataRef;
     private ValueEventListener mPostListener;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
@@ -49,6 +58,7 @@ public class Tab3programs extends Fragment{
         rootRef = FirebaseDatabase.getInstance().getReference();
         programsRef = rootRef.child("programs-menu");
 
+
         System.out.println("Create View");
         return rootView;
     }
@@ -60,17 +70,21 @@ public class Tab3programs extends Fragment{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 System.out.println("On Data Change");
-                ArrayList<Program> programArrayList = new ArrayList<>();
                 Program program;
+                final ArrayList<Program> programArrayList = new ArrayList<>();
+
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                     program = ds.getValue(Program.class);
-                    //System.out.println(program.toString());
                     programArrayList.add(program);
                 }
+
                 adapter = new ProgramsAdapter(programArrayList, new ItemClickListener() {
                     @Override
                     public void onItemClick(int position) {
-                        System.out.println("Position" + position);
+                        String title = programArrayList.get(position).title;
+                        System.out.println(title);
+                        insertProgramData(title);
+
                     }
                 });
                 recyclerView.setAdapter(adapter);
@@ -78,15 +92,45 @@ public class Tab3programs extends Fragment{
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        programsRef.addValueEventListener(postListener);
+        mPostListener = postListener;
+    }
+    private void insertProgramData(String title){
+        programDataRef = rootRef.child("programs-data").child(title);
+        final ArrayList<ContentValues> exerciseCVs = new ArrayList<>();
+        programDataRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Exercise exercise;
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    exercise = ds.getValue(Exercise.class);
+                    ContentValues cv = new ContentValues();
+                    cv.put(Contract.ExerciseEntry.COLUMN_WORKOUT, exercise.getWorkout());
+                    cv.put(Contract.ExerciseEntry.COLUMN_EXERCISE_NAME, exercise.getName());
+                    cv.put(Contract.ExerciseEntry.COLUMN_WEIGHT, exercise.getWeight());
+                    cv.put(Contract.ExerciseEntry.COLUMN_SETS, exercise.getSets());
+                    cv.put(Contract.ExerciseEntry.COLUMN_REPS, exercise.getReps());
+                    cv.put(Contract.ExerciseEntry.COLUMN_TIME, exercise.getTime());
+                    cv.put(Contract.ExerciseEntry.COLUMN_NOTE, exercise.getNote());
+                    exerciseCVs.add(cv);
+                }
+                int entries = getContext().getContentResolver().bulkInsert(Contract.BASE_CONTENT_URI,
+                        exerciseCVs.toArray(new ContentValues[exerciseCVs.size()]));
+                System.out.println("Inserted rows: " + entries);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Getting Post failed, log a message
                 Timber.w(databaseError.toException(), "loadPost:onCancelled");
                 // [START_EXCLUDE]
                 System.out.println("Failed to load post");
                 // [END_EXCLUDE]
             }
-        };
-        programsRef.addValueEventListener(postListener);
-        mPostListener = postListener;
+        });
     }
 
     @Override

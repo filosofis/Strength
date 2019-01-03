@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 public class ProgramsAdapter extends RecyclerView.Adapter<ProgramsAdapter.ViewHolder> {
     private ArrayList<Program> programArrayList;
-
     public ItemClickListener clickListener;
 
 

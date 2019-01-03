@@ -12,7 +12,7 @@ import com.lundqvist.oscar.strength.data.Contract.ExerciseEntry;
 public class WorkoutDbHelper extends SQLiteOpenHelper {
 
 
-    public WorkoutDbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    WorkoutDbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
@@ -22,19 +22,19 @@ public class WorkoutDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_EXERCISE_TABLE = "CREATE TABLE " +
                 ExerciseEntry.TABLE_NAME + " (" +
                 ExerciseEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                ExerciseEntry.COLUMN_EXERCISE_NAME + " TEXT NOT NULL, " +
-                ExerciseEntry.COLUMN_WEIGHT + " INTEGER, " +
-                ExerciseEntry.COLUMN_SETS + " INTEGER NOT NULL, " +
-                ExerciseEntry.COLUMN_REPS + " INTEGER NOT NULL, " +
-                ExerciseEntry.COLUMN_TIME + " INTEGER NOT NULL, " +
-                ExerciseEntry.COLUMN_NOTE + " TEXT NOT NULL, " +
-                ExerciseEntry.COLUMN_WORKOUT + "INTEGER NOT NULL)";
+                ExerciseEntry.COLUMN_EXERCISE_NAME + " TEXT," +
+                ExerciseEntry.COLUMN_WEIGHT + " INTEGER," +
+                ExerciseEntry.COLUMN_SETS + " INTEGER," +
+                ExerciseEntry.COLUMN_REPS + " INTEGER," +
+                ExerciseEntry.COLUMN_TIME + " INTEGER," +
+                ExerciseEntry.COLUMN_NOTE + " TEXT," +
+                ExerciseEntry.COLUMN_WORKOUT + " INTEGER)";
         db.execSQL(SQL_CREATE_EXERCISE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //db.execSQL("DROP TABLE IF EXISTS " + WorkoutEntry.TABLE_NAME);
+        System.out.println("Table was upgraded oldVersion: " + oldVersion + " newVersion: " + newVersion);
         db.execSQL("DROP TABLE IF EXISTS " + ExerciseEntry.TABLE_NAME);
         onCreate(db);
     }

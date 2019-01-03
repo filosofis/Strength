@@ -13,12 +13,7 @@ public class Exercise {
     private int time;
     private String note;
 
-    public Exercise(int workout, String name, int weight, int sets, int reps, int time, String note) {
-        this.name = name;
-        this.weight = weight;
-        this.sets = sets;
-        this.reps = reps;
-        this.workout = workout;
+    public Exercise() {
     }
 
     @Override

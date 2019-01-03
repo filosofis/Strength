@@ -32,7 +32,7 @@ public class WorkoutProvider extends ContentProvider {
                 getContext(),
                 DBNAME,
                 null,
-                1
+                8
         );
         return true;
     }
@@ -90,6 +90,7 @@ public class WorkoutProvider extends ContentProvider {
         int returnCount = 0;
         try{
             for(ContentValues value : values){
+                System.out.println(value.toString());
                 db.insert(Contract.ExerciseEntry.TABLE_NAME, null, value);
                 returnCount++;
             }
