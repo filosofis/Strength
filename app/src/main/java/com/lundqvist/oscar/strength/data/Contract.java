@@ -40,8 +40,8 @@ public class Contract {
         return queryUri.getLastPathSegment();
     }
 
-    public static Uri makeUriForWorkout(String workout){
-        return ExerciseEntry.URI.buildUpon().appendPath(workout).build();
+    public static Uri makeUriForWorkout(int workout){
+        return ExerciseEntry.URI.buildUpon().appendPath(Integer.toString(workout)).build();
     }
 
 }

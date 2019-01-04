@@ -1,7 +1,6 @@
 package com.lundqvist.oscar.strength.ui;
 
 import android.database.Cursor;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,36 +9,15 @@ import com.lundqvist.oscar.strength.R;
 import com.lundqvist.oscar.strength.data.Contract;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.RecyclerView;
-import com.lundqvist.oscar.strength.data.Contract.ExerciseEntry;
-import com.lundqvist.oscar.strength.model.Exercise;
 
-public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHolder>
-implements LoaderManager.LoaderCallbacks<Cursor>{
+public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHolder> {
     private Cursor cursor;
 
     public WorkoutAdapter(Cursor cursor) {
         this.cursor = cursor;
     }
 
-    @NonNull
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-
-    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView nameView;
@@ -69,13 +47,18 @@ implements LoaderManager.LoaderCallbacks<Cursor>{
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         cursor.moveToPosition(position);
-        String exerciseName= cursor.getString(ExerciseEntry.INDEX_EXERCISE_NAME);
-        holder.nameView.setText(exerciseName);
-        holder.weightView.setText(cursor.getInt(ExerciseEntry.INDEX_WEIGHT));
+        String name = cursor.getString(Contract.ExerciseEntry.INDEX_EXERCISE_NAME);
+        String sets = Integer.toString(cursor.getInt(Contract.ExerciseEntry.INDEX_SETS));
+        String reps = Integer.toString(cursor.getInt(Contract.ExerciseEntry.INDEX_REPS));
+        String weight = Integer.toString(cursor.getInt(Contract.ExerciseEntry.INDEX_WEIGHT));
+        holder.nameView.setText(name);
+        holder.setsView.setText(sets);
+        holder.repsView.setText(reps);
+        holder.weightView.setText(weight);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return cursor.getCount();
     }
 }
