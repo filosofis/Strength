@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -9,31 +8,94 @@
     android:layout_marginBottom="4dp">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
 
-        <TextView
-            android:id="@+id/nameView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/setsView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/repsView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/weightView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/nameView"
+                style="@style/mainTitleTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/setsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/subTitleTextStyle"
+                android:paddingEnd="5dp"
+                android:text="@string/sets" />
+
+            <TextView
+                android:id="@+id/setsView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/bodyTextStyle"
+                android:paddingEnd="10dp"/>
+
+            <TextView
+                android:id="@+id/repsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/subTitleTextStyle"
+                android:paddingEnd="5dp"
+                android:text="@string/reps"/>
+
+            <TextView
+                android:id="@+id/repsView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/bodyTextStyle"
+                android:paddingEnd="10dp"/>
+
+            <TextView
+                android:id="@+id/weightTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/subTitleTextStyle"
+                android:paddingEnd="5dp"
+                android:text="@string/weight" />
+            <TextView
+                android:id="@+id/weightView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/bodyTextStyle"
+                android:paddingEnd="10dp"/>
+
+            <TextView
+                android:id="@+id/timeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/subTitleTextStyle"
+                android:paddingEnd="5dp"
+                android:text="@string/time" />
+            <TextView
+                android:id="@+id/timeView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/bodyTextStyle"
+                android:paddingEnd="10dp"/>
+        </LinearLayout>
+
         <TextView
             android:id="@+id/noteView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+        <TextView
+            android:id="@+id/completeView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

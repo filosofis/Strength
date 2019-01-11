@@ -5,4 +5,16 @@
     <string name="tab_text_3">Tab 3</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- Bottom Navication Bar -->
+    <string name="back">BACK</string>
+    <string name="complete">COMPLETE</string>
+    <string name="forward">FORWARD</string>
+
+    <!-- Exercise Titles -->
+    <string name="sets" translatable="true">Sets:</string>
+    <string name="reps" translatable="true">Reps:</string>
+    <string name="weight" translatable="true">Weight:</string>
+    <string name="note" translatable="true">Note</string>
+    <string name="time" translatable="true">Time</string>
 </resources>

@@ -51,8 +51,6 @@ public class Tab3programs extends Fragment{
 
         rootRef = FirebaseDatabase.getInstance().getReference();
         programsRef = rootRef.child("programs-menu");
-
-
         System.out.println("Create View");
         return rootView;
     }
@@ -77,8 +75,13 @@ public class Tab3programs extends Fragment{
                     public void onItemClick(int position) {
                         String title = programArrayList.get(position).title;
                         System.out.println(title);
+                        getContext().getContentResolver().call(
+                                Contract.BASE_CONTENT_URI,
+                                "clearProgram",
+                                null,
+                                null
+                        );
                         insertProgramData(title);
-
                     }
                 });
                 recyclerView.setAdapter(adapter);

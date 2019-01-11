@@ -12,6 +12,7 @@ public class Exercise {
     private int reps;
     private int time;
     private String note;
+    private long completed;
 
     public Exercise() {
     }
@@ -26,6 +27,7 @@ public class Exercise {
                 ", reps=" + reps +
                 ", time=" + time +
                 ", note='" + note + '\'' +
+                ", completed=" + completed +
                 '}';
     }
 

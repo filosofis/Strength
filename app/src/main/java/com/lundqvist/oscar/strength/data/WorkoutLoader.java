@@ -17,4 +17,5 @@ public class WorkoutLoader extends CursorLoader {
     public static WorkoutLoader getWorkout(Context context, int itemId){
         return new WorkoutLoader(context, Contract.makeUriForWorkout(itemId));
     }
+
 }

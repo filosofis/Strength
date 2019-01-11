@@ -3,10 +3,16 @@ package com.lundqvist.oscar.strength.data;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Bundle;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -32,7 +38,7 @@ public class WorkoutProvider extends ContentProvider {
                 getContext(),
                 DBNAME,
                 null,
-                8
+                10
         );
         return true;
     }
@@ -86,6 +92,7 @@ public class WorkoutProvider extends ContentProvider {
     @Override
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         final SQLiteDatabase db = wDbHelper.getReadableDatabase();
+        clearProgram();
         db.beginTransaction();
         int returnCount = 0;
         try{
@@ -98,16 +105,73 @@ public class WorkoutProvider extends ContentProvider {
         } finally {
             db.endTransaction();
         }
+        getContext().getContentResolver().notifyChange(uri, null);
         return returnCount;
     }
 
+    @Nullable
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public Bundle call(@NonNull String method, @Nullable String arg, @Nullable Bundle extras) {
+        switch(method){
+            case "clearProgram":
+                System.out.println("deleted rows: " + clearProgram());
+                break;
+        }
+        return null;
+    }
+
+    /**
+     * Deletes all uncompleted workouts and resets currentWorkout to 1
+     * @return deleted rows
+     */
+    private int clearProgram(){
+        final SQLiteDatabase db = wDbHelper.getWritableDatabase();
+        SharedPreferences preferences = getContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("currentWorkout", 1);
+        editor.apply();
+        return db.delete(
+                Contract.ExerciseEntry.TABLE_NAME,
+                Contract.ExerciseEntry.COLUMN_WORKOUT +">" + 0,
+                null);
+    }
+
+
+    @Override
+    public int delete(@NonNull Uri uri,
+                      @Nullable String selection,
+                      @Nullable String[] selectionArgs) {
         return 0;
     }
 
+
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int update(@NonNull Uri uri,
+                      @Nullable ContentValues values,
+                      @Nullable String selection,
+                      @Nullable String[] selectionArgs) {
+        final SQLiteDatabase db = wDbHelper.getWritableDatabase();
+        switch (sUriMatcher.match(uri)){
+            case WORKOUT:
+                Calendar cal = Calendar.getInstance();
+                long time = cal.getTimeInMillis();
+                System.out.println(time);
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(Contract.ExerciseEntry.COLUMN_COMPLETED, time);
+                Date date = new Date(time);
+                String formattedDate = DateFormat.getDateInstance().format(date);
+                System.out.println("Completed on " + formattedDate);
+                System.out.println("Uri + " + Contract.getWorkoutFromUri(uri));
+
+                return db.update(
+                        Contract.ExerciseEntry.TABLE_NAME,
+                        contentValues,
+                        Contract.ExerciseEntry.COLUMN_WORKOUT + " = ?",
+                        new String[]{Contract.getWorkoutFromUri(uri)}
+                );
+            case EXERCISE:
+                break;
+        }
         return 0;
     }
 }
