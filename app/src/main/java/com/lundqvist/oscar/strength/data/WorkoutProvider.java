@@ -28,8 +28,8 @@ public class WorkoutProvider extends ContentProvider {
     static final String DBNAME = "workout.db";
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     static{
-        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_EXERCISE, EXERCISE);
-        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.PATH_WORKOUT, WORKOUT);
+        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.MATCH_EXERCISE, EXERCISE);
+        sUriMatcher.addURI(Contract.CONTENT_AUTHORITY, Contract.MATCH_WORKOUT, WORKOUT);
     }
 
     @Override
@@ -158,10 +158,10 @@ public class WorkoutProvider extends ContentProvider {
                 System.out.println(time);
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(Contract.ExerciseEntry.COLUMN_COMPLETED, time);
-                Date date = new Date(time);
-                String formattedDate = DateFormat.getDateInstance().format(date);
-                System.out.println("Completed on " + formattedDate);
-                System.out.println("Uri + " + Contract.getWorkoutFromUri(uri));
+                //Date date = new Date(time);
+                //String formattedDate = DateFormat.getDateInstance().format(date);
+                //System.out.println("Completed on " + formattedDate);
+                //System.out.println("Uri + " + Contract.getWorkoutFromUri(uri));
 
                 return db.update(
                         Contract.ExerciseEntry.TABLE_NAME,
@@ -170,7 +170,13 @@ public class WorkoutProvider extends ContentProvider {
                         new String[]{Contract.getWorkoutFromUri(uri)}
                 );
             case EXERCISE:
-                break;
+                return db.update(
+                        Contract.ExerciseEntry.TABLE_NAME,
+                        values,
+                        Contract.ExerciseEntry.COLUMN_WORKOUT + " = ?"
+                        + " AND " + Contract.ExerciseEntry.COLUMN_REPS + " = ?",
+                        new String[]{Contract.getExerciseFromUri(uri),"-1"}
+                        );
         }
         return 0;
     }

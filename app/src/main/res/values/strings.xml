@@ -17,4 +17,8 @@
     <string name="weight" translatable="true">Weight:</string>
     <string name="note" translatable="true">Note</string>
     <string name="time" translatable="true">Time</string>
+    <string name="completed" translatable="true">Completed on:</string>
+
+    <string name="amrap" translatable="false">AMRAP</string>
+    <string name="hint_text" translatable="true">Amrap Result</string>
 </resources>

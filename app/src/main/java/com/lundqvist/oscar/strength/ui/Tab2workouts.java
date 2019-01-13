@@ -8,6 +8,7 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -27,7 +28,8 @@ import com.lundqvist.oscar.strength.data.WorkoutLoader;
  * Created by Oscar on 2018-01-27.
  */
 
-public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+        WorkoutAdapter.AdapterCallback {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -35,6 +37,13 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
     private BottomNavigationView bottomNavigationView;
     private Menu menu;
     private SharedPreferences sharedPref;
+    private String amrap;
+
+    @Override
+    public void textInputValue(String amrap) {
+        this.amrap = amrap;
+        System.out.println("Successfull Amrap " + amrap);
+    }
 
     @NonNull
     @Override
@@ -46,7 +55,7 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         //System.out.println("Load Finished");
-        WorkoutAdapter workoutAdapter = new WorkoutAdapter(cursor);
+        WorkoutAdapter workoutAdapter = new WorkoutAdapter(cursor, getContext(), this);
         recyclerView.setAdapter(workoutAdapter);
         //System.out.println("Load cursor " + cursor.getCount());
         MenuItem completeButton = menu.getItem(1);
@@ -119,11 +128,22 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
     }
     private void complete(){
         System.out.println("Completeing  " + workoutId);
+        System.out.println("AMRAP " + amrap);
         SharedPreferences preferences = getContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
         int currentWorkout = preferences.getInt("currentWorkout", 1);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Contract.ExerciseEntry.COLUMN_REPS, amrap);
+
         System.out.println(" Lines Completed " + getContext().getContentResolver().update(
                 Contract.makeUriForWorkout(workoutId),
                 null, null, null));
+
+        if(amrap!=null) {
+            System.out.println(" Lines Updated " + getContext().getContentResolver().update(
+                    Contract.makeUriForExercise(workoutId),
+                    contentValues, null, null));
+        }
+
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("currentWorkout", currentWorkout+1);
         editor.apply();

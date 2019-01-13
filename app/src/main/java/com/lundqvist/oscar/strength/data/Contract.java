@@ -12,14 +12,14 @@ public class Contract {
 
     public static final String CONTENT_AUTHORITY = "com.lundqvist.oscar.strength";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-    public static final String PATH_WORKOUT = "exercise/*";
+    public static final String PATH_WORKOUT = "workout";
     public static final String PATH_EXERCISE = "exercise";
+    public static final String MATCH_WORKOUT = "workout/*";
+    public static final String MATCH_EXERCISE = "exercise/*";
     public static final String REST_DAY = "rest";
 
 
     public static final class ExerciseEntry implements BaseColumns {
-        public static final Uri URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_EXERCISE).build();
         public static final String TABLE_NAME = "exercise";
         public static final String COLUMN_EXERCISE_NAME = "exerciseName";
         public static final String COLUMN_WEIGHT = "weight";
@@ -43,8 +43,18 @@ public class Contract {
         return queryUri.getLastPathSegment();
     }
 
-    public static Uri makeUriForWorkout(int workout){
-        return ExerciseEntry.URI.buildUpon().appendPath(Integer.toString(workout)).build();
+    static String getExerciseFromUri(Uri queryUri){return queryUri.getLastPathSegment();
     }
+
+    public static Uri makeUriForWorkout(int workout){
+        Uri URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_WORKOUT).build();
+        return URI.buildUpon().appendPath(Integer.toString(workout)).build();
+    }
+
+    public static Uri makeUriForExercise(int workout){
+        Uri URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_EXERCISE).build();
+        return URI.buildUpon().appendPath(Integer.toString(workout)).build();
+    }
+
 
 }
