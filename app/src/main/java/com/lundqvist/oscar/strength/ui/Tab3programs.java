@@ -95,6 +95,7 @@ public class Tab3programs extends Fragment{
         programsRef.addValueEventListener(postListener);
         mPostListener = postListener;
     }
+
     private void insertProgramData(String title){
         programDataRef = rootRef.child("programs-data").child(title);
         final ArrayList<ContentValues> exerciseCVs = new ArrayList<>();
@@ -104,6 +105,9 @@ public class Tab3programs extends Fragment{
                 Exercise exercise;
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                     exercise = ds.getValue(Exercise.class);
+                    if(exercise.getNote() == null){
+                        exercise.setNote("0");
+                    }
                     ContentValues cv = new ContentValues();
                     cv.put(Contract.ExerciseEntry.COLUMN_WORKOUT, exercise.getWorkout());
                     cv.put(Contract.ExerciseEntry.COLUMN_EXERCISE_NAME, exercise.getName());
@@ -114,6 +118,10 @@ public class Tab3programs extends Fragment{
                     cv.put(Contract.ExerciseEntry.COLUMN_NOTE, exercise.getNote());
                     exerciseCVs.add(cv);
                 }
+                getContext().getContentResolver().call(Contract.BASE_CONTENT_URI,
+                        "clearProgram",
+                        null,
+                        null);
                 int entries = getContext().getContentResolver().bulkInsert(Contract.BASE_CONTENT_URI,
                         exerciseCVs.toArray(new ContentValues[exerciseCVs.size()]));
                 System.out.println("Inserted rows: " + entries);

@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.statsActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -19,11 +20,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name=".data.WorkoutProvider"
             android:authorities="com.lundqvist.oscar.strength"
-            android:exported="false"
-            />
+            android:exported="false" />
     </application>
 
 </manifest>

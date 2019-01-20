@@ -35,6 +35,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
         void textInputValue(String amrap);
     }
 
+
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView nameView;
         public TextView setsView;
@@ -131,7 +132,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
                 holder.repsView.setText(repsString);
                 adapterCallback.textInputValue(null);
             }
-            if(note.length()>2){
+            if(note.length() > 2){
                 holder.noteView.setText(note);
                 holder.noteView.setVisibility(View.VISIBLE);
                 System.out.println("note " + note);

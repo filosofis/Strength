@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.lundqvist.oscar.strength.data.Contract;
 import com.lundqvist.oscar.strength.ui.Tab1home;
 import com.lundqvist.oscar.strength.ui.Tab2workouts;
 import com.lundqvist.oscar.strength.ui.Tab3programs;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            getContentResolver().call(Contract.BASE_CONTENT_URI, "insertTestData", null, null);
         }
 
         return super.onOptionsItemSelected(item);

@@ -57,10 +57,10 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         //System.out.println("Load Finished");
         WorkoutAdapter workoutAdapter = new WorkoutAdapter(cursor, getContext(), this);
         recyclerView.setAdapter(workoutAdapter);
-        //System.out.println("Load cursor " + cursor.getCount());
+        System.out.println("Load cursor " + cursor.getCount());
         MenuItem completeButton = menu.getItem(1);
         MenuItem backButton = menu.getItem(0);
-        //MenuItem forwardButton = menu.getItem(2);
+        MenuItem forwardButton = menu.getItem(2);
         int currentWorkout = sharedPref.getInt("currentWorkout", 1);
         System.out.println("Workout id: " + workoutId + " Current Workout: " + currentWorkout);
         if(workoutId == currentWorkout){
@@ -73,10 +73,16 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         }else{
             backButton.setEnabled(true);
         }
+        if(cursor.getCount()<1){
+            forwardButton.setEnabled(false);
+        }else{
+            forwardButton.setEnabled(true);
+        }
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+
         System.out.println("Load Reset");
     }
 
@@ -92,7 +98,6 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         workoutId = sharedPref.getInt("currentWorkout", 1);
         System.out.println("Creating view with workoutID " + workoutId);
         initLoader(1);
-
         bottomNavigationView = rootView.findViewById(R.id.bottom_navigation);
         menu = bottomNavigationView.getMenu();
         menu.getItem(2).setCheckable(false);
@@ -147,6 +152,7 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("currentWorkout", currentWorkout+1);
         editor.apply();
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
     public void initLoader(int workoutId){
         getLoaderManager().initLoader(workoutId, null, this);

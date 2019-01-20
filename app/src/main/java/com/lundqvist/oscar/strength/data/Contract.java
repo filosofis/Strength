@@ -14,8 +14,10 @@ public class Contract {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_WORKOUT = "workout";
     public static final String PATH_EXERCISE = "exercise";
+    public static final String PATH_COMPLETED = "completed";
     public static final String MATCH_WORKOUT = "workout/*";
     public static final String MATCH_EXERCISE = "exercise/*";
+    public static final String MATCH_COMPLETED = "completed/*";
     public static final String REST_DAY = "rest";
 
 
@@ -45,6 +47,8 @@ public class Contract {
 
     static String getExerciseFromUri(Uri queryUri){return queryUri.getLastPathSegment();
     }
+    static String getCompletedFromUri(Uri queryUri){return queryUri.getLastPathSegment();
+    }
 
     public static Uri makeUriForWorkout(int workout){
         Uri URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_WORKOUT).build();
@@ -56,5 +60,8 @@ public class Contract {
         return URI.buildUpon().appendPath(Integer.toString(workout)).build();
     }
 
+    public static Uri makeUriForCompleted(){
+        return BASE_CONTENT_URI.buildUpon().appendPath(PATH_COMPLETED).build();
+    }
 
 }
