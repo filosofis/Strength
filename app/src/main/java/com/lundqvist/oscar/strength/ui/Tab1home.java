@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.lundqvist.oscar.strength.R;
+import com.lundqvist.oscar.strength.Utility;
 import com.lundqvist.oscar.strength.data.Contract;
 
 import java.util.Calendar;
@@ -59,10 +60,15 @@ public class Tab1home extends Fragment {
                 null
         );
         cursor.moveToFirst();
+        Utility utility = new Utility();
         do{
             System.out.println("Name :" + cursor.getString(Contract.ExerciseEntry.INDEX_EXERCISE_NAME));
             System.out.println("Sets :" + cursor.getInt(Contract.ExerciseEntry.INDEX_SETS));
-            System.out.println("Reps :" + cursor.getInt(Contract.ExerciseEntry.INDEX_REPS));
+            int weight = cursor.getInt(Contract.ExerciseEntry.INDEX_WEIGHT);
+            int reps = cursor.getInt(Contract.ExerciseEntry.INDEX_REPS);
+            if(weight != 0){
+                System.out.println("estimated 1RM: " + utility.oneRepMaxCalc(reps, weight));
+            }
         }while(cursor.moveToNext());
         cursor.close();
     }

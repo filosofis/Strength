@@ -118,6 +118,7 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
                                 break;
                             case R.id.button_complete:
                                 complete();
+                                getLoaderManager().notifyAll();
                                 break;
                             case R.id.button_forward:
                                 workoutId++;

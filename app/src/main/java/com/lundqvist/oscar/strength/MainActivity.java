@@ -12,12 +12,15 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.lundqvist.oscar.strength.data.Contract;
+import com.lundqvist.oscar.strength.ui.StatsActivity;
 import com.lundqvist.oscar.strength.ui.Tab1home;
 import com.lundqvist.oscar.strength.ui.Tab2workouts;
 import com.lundqvist.oscar.strength.ui.Tab3programs;
@@ -35,11 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
@@ -65,9 +64,18 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            getContentResolver().call(Contract.BASE_CONTENT_URI, "insertTestData", null, null);
+        switch(id){
+            case R.id.action_insert:
+                getContentResolver().call(
+                        Contract.BASE_CONTENT_URI,
+                        "insertTestData",
+                        null,
+                        null);
+                break;
+            case R.id.action_settings:
+                Intent intent = new Intent(this, StatsActivity.class);
+                startActivity(intent);
+                break;
         }
 
         return super.onOptionsItemSelected(item);

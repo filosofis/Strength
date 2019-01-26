@@ -1,6 +1,7 @@
 package com.lundqvist.oscar.strength.ui;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,10 +26,12 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
     private Cursor cursor;
     private String amrapResult;
     private AdapterCallback adapterCallback;
+    private Context context;
 
     public WorkoutAdapter(Cursor cursor, Context context, AdapterCallback adapterCallback) {
         this.cursor = cursor;
         this.adapterCallback = adapterCallback;
+        this.context = context;
     }
 
     public interface AdapterCallback{
@@ -108,6 +111,9 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
         }else {
             holder.nameView.setText(name);
             holder.setsView.setText(sets);
+            /*
+                Reps -1 indicating a AMRAP set
+             */
             if(reps == -1){
                 holder.inputText.setVisibility(View.VISIBLE);
                 holder.repsView.setText(R.string.amrap);
@@ -138,7 +144,10 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
                 System.out.println("note " + note);
             }else{holder.noteView.setVisibility(View.GONE);}
             if(weight != 0) {
-                holder.weightView.setText(Integer.toString(weight));
+                SharedPreferences prefs = context.getSharedPreferences("prefs", Context.MODE_PRIVATE);
+                int oneRepMax = prefs.getInt("oneRepMax", 1);
+                int calculatedWeight = oneRepMax*weight;
+                holder.weightView.setText(Integer.toString(calculatedWeight));
             }else{
                 holder.weightTitle.setVisibility(View.GONE);
                 holder.weightView.setVisibility(View.GONE);
@@ -168,9 +177,4 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
     public int getItemCount() {
         return cursor.getCount();
     }
-
-    public void getMethod(){
-
-    }
-
 }

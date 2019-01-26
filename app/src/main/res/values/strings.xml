@@ -3,8 +3,14 @@
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
     <string name="tab_text_3">Tab 3</string>
-    <string name="action_settings">Insert Testdata</string>
+
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- Settings Menu -->
+    <string name="action_settings">Settings</string>
+    <string name="action_test_data">Insert Test data</string>
+    <string name="hint_reps">Reps</string>
+    <string name="hint_weight">Weight</string>
 
     <!-- Bottom Navication Bar -->
     <string name="back">BACK</string>
@@ -19,6 +25,14 @@
     <string name="time" translatable="true">Time</string>
     <string name="completed" translatable="true">Completed on:</string>
 
+    <!-- Programs -->
+    <string name="title_duration" translatable="true">Duration:</string>
+    <string name="title_difficulty" translatable="true">Difficulty:</string>
+    <string name="title_author" translatable="true">Author:</string>
+
     <string name="amrap" translatable="false">AMRAP</string>
     <string name="hint_text" translatable="true">Amrap Result</string>
+
+    <string name="save" translatable="true">save</string>
+
 </resources>

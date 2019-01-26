@@ -175,11 +175,15 @@ public class WorkoutProvider extends ContentProvider {
                     cv.put(Contract.ExerciseEntry.COLUMN_EXERCISE_NAME, exercise.getName());
                     cv.put(Contract.ExerciseEntry.COLUMN_WEIGHT, exercise.getWeight());
                     cv.put(Contract.ExerciseEntry.COLUMN_SETS, exercise.getSets());
-                    cv.put(Contract.ExerciseEntry.COLUMN_REPS, exercise.getReps());
                     cv.put(Contract.ExerciseEntry.COLUMN_TIME, exercise.getTime());
                     cv.put(Contract.ExerciseEntry.COLUMN_NOTE, exercise.getNote());
 
-                    // TODO Find a way to calculate completetion date without reinitiating Calendar
+                    //AMRAP result
+                    if(exercise.getReps() == -1){
+                        exercise.setReps(3);
+                    }
+                    cv.put(Contract.ExerciseEntry.COLUMN_REPS, exercise.getReps());
+
                     cal.setTimeInMillis(now);
                     dateDelta = -113+exercise.getWorkout();
                     cal.add(Calendar.DAY_OF_YEAR, dateDelta);
