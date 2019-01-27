@@ -20,6 +20,13 @@ public class Contract {
     public static final String MATCH_COMPLETED = "completed/*";
     public static final String REST_DAY = "rest";
 
+    public static final String SHARED_REPFS = "prefs";
+    public static final String CURRENT_WORKOUT = "currentWorkout";
+    public static final String RM_SQUAT = "squatRM";
+    public static final String RM__BENCH = "benchRM";
+    public static final String RM__DEAD = "deadRM";
+    public static final String RM__PRESS = "pressRM";
+
 
     public static final class ExerciseEntry implements BaseColumns {
         public static final String TABLE_NAME = "exercise";

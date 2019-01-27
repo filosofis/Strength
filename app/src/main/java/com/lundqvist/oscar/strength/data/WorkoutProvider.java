@@ -259,10 +259,6 @@ public class WorkoutProvider extends ContentProvider {
                 System.out.println(time);
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(Contract.ExerciseEntry.COLUMN_COMPLETED, time);
-                //Date date = new Date(time);
-                //String formattedDate = DateFormat.getDateInstance().format(date);
-                //System.out.println("Completed on " + formattedDate);
-                //System.out.println("Uri + " + Contract.getWorkoutFromUri(uri));
 
                 return db.update(
                         Contract.ExerciseEntry.TABLE_NAME,

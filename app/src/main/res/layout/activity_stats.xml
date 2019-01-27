@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primaryLightColor"
     android:orientation="vertical"
     android:paddingTop="@dimen/appbar_padding_top">
 
@@ -17,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Squat"
-            android:textColor="@color/primaryTextColor" />
+            android:textColor="@color/secondaryTextColor" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,26 +24,28 @@
             android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/repSquatLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
                 android:hint="@string/hint_reps">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/RepInputSquat"
+                    android:id="@+id/repInputSquat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/weightSquatLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
                 android:hint="@string/hint_weight">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/WeightInputSquat"
+                    android:id="@+id/weightInputSquat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number" />
@@ -72,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Bench Press"
-            android:textColor="@color/primaryTextColor" />
+            android:textColor="@color/secondaryTextColor" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -80,26 +81,28 @@
             android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/repBenchLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
                 android:hint="@string/hint_reps">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/RepInputBench"
+                    android:id="@+id/repInputBench"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/weightBenchLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
                 android:hint="@string/hint_weight">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/WeightInputBench"
+                    android:id="@+id/weightInputBench"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number" />
@@ -127,7 +130,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Deadlift"
-            android:textColor="@color/primaryTextColor" />
+            android:textColor="@color/secondaryTextColor" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -135,26 +138,28 @@
             android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/repDeadLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
                 android:hint="@string/hint_reps">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/RepInputDead"
+                    android:id="@+id/repInputDead"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/weightDeadLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
                 android:hint="@string/hint_weight">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/WeightInputDead"
+                    android:id="@+id/weightInputDead"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number" />
@@ -182,7 +187,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Military Press"
-            android:textColor="@color/primaryTextColor" />
+            android:textColor="@color/secondaryTextColor" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -190,26 +195,28 @@
             android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/repPressLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
                 android:hint="@string/hint_reps">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/RepInputPress"
+                    android:id="@+id/repInputPress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/weightPressLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="25"
                 android:hint="@string/hint_weight">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/WeightInputText"
+                    android:id="@+id/weightInputPress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number" />

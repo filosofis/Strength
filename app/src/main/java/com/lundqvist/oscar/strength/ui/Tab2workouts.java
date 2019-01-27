@@ -135,8 +135,8 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
     private void complete(){
         System.out.println("Completeing  " + workoutId);
         System.out.println("AMRAP " + amrap);
-        SharedPreferences preferences = getContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
-        int currentWorkout = preferences.getInt("currentWorkout", 1);
+        SharedPreferences preferences = getContext().getSharedPreferences(Contract.SHARED_REPFS, Context.MODE_PRIVATE);
+        int currentWorkout = preferences.getInt(Contract.CURRENT_WORKOUT, 1);
         ContentValues contentValues = new ContentValues();
         contentValues.put(Contract.ExerciseEntry.COLUMN_REPS, amrap);
 
@@ -153,7 +153,7 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("currentWorkout", currentWorkout+1);
         editor.apply();
-        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.getAdapter().notifyAll();
     }
     public void initLoader(int workoutId){
         getLoaderManager().initLoader(workoutId, null, this);
