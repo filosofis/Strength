@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -118,6 +119,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
                 holder.inputText.setVisibility(View.VISIBLE);
                 holder.repsView.setText(R.string.amrap);
                 amrapResult = holder.inputText.getText().toString();
+                adapterCallback.textInputValue("disable");
                 adapterCallback.textInputValue(amrapResult);
                 holder.inputText.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -136,7 +138,6 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
                 });
             }else {
                 holder.repsView.setText(repsString);
-                adapterCallback.textInputValue(null);
             }
             if(note.length() > 2){
                 holder.noteView.setText(note);
@@ -144,9 +145,22 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
                 System.out.println("note " + note);
             }else{holder.noteView.setVisibility(View.GONE);}
             if(weight != 0) {
-                SharedPreferences prefs = context.getSharedPreferences("prefs", Context.MODE_PRIVATE);
-                int oneRepMax = prefs.getInt("oneRepMax", 1);
-                int calculatedWeight = oneRepMax*weight;
+                SharedPreferences prefs = context.getSharedPreferences(Contract.SHARED_REPFS, Context.MODE_PRIVATE);
+                int calculatedWeight = 1;
+                switch(name){
+                    case "Squat":
+                        calculatedWeight = (weight*prefs.getInt("squatRM", 1))/100;
+                        break;
+                    case "Bench":
+                        calculatedWeight = (weight*prefs.getInt(Contract.RM__BENCH, 1))/100;
+                        break;
+                    case "Deadlift":
+                        calculatedWeight = (weight*prefs.getInt(Contract.RM__DEAD, 1))/100;
+                        break;
+                    case "Military Press":
+                        calculatedWeight = (weight*prefs.getInt(Contract.RM__PRESS, 1))/100;
+                        break;
+                }
                 holder.weightView.setText(Integer.toString(calculatedWeight));
             }else{
                 holder.weightTitle.setVisibility(View.GONE);
@@ -177,4 +191,5 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
     public int getItemCount() {
         return cursor.getCount();
     }
+
 }

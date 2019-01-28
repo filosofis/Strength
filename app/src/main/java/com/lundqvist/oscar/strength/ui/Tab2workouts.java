@@ -42,13 +42,20 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void textInputValue(String amrap) {
         this.amrap = amrap;
-        System.out.println("Successfull Amrap " + amrap);
+        System.out.println("textInputValue  " + amrap);
+        if(amrap.equals("disable")){
+            System.out.println("Amrap, disabling complete button");
+            menu.getItem(1).setEnabled(false);
+        }else if(amrap.length()>0){
+            System.out.println("Amrap > 1, enabling complete button");
+            menu.getItem(1).setEnabled(true);
+        }
     }
 
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        System.out.println("Load Started");
+        //System.out.println("Load Started");
         return WorkoutLoader.getWorkout(getContext(), id);
     }
 
@@ -56,6 +63,7 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         //System.out.println("Load Finished");
         WorkoutAdapter workoutAdapter = new WorkoutAdapter(cursor, getContext(), this);
+        recyclerView.invalidate();
         recyclerView.setAdapter(workoutAdapter);
         System.out.println("Load cursor " + cursor.getCount());
         MenuItem completeButton = menu.getItem(1);
@@ -63,6 +71,10 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         MenuItem forwardButton = menu.getItem(2);
         int currentWorkout = sharedPref.getInt("currentWorkout", 1);
         System.out.println("Workout id: " + workoutId + " Current Workout: " + currentWorkout);
+
+        /*if(workoutAdapter.hasAmrap){
+            System.out.println("Yup it has an AMRAP");
+        }*/
         if(workoutId == currentWorkout){
             completeButton.setEnabled(true);
         }else{
@@ -82,7 +94,7 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-
+        recyclerView.setAdapter(null);
         System.out.println("Load Reset");
     }
 
@@ -93,10 +105,9 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         Context context = getContext();
-        sharedPref = context.getSharedPreferences(
-                "prefs", Context.MODE_PRIVATE);
+        sharedPref = context.getSharedPreferences(Contract.SHARED_REPFS, Context.MODE_PRIVATE);
         workoutId = sharedPref.getInt("currentWorkout", 1);
-        System.out.println("Creating view with workoutID " + workoutId);
+        //System.out.println("Creating view with workoutID " + workoutId);
         initLoader(1);
         bottomNavigationView = rootView.findViewById(R.id.bottom_navigation);
         menu = bottomNavigationView.getMenu();
@@ -118,7 +129,6 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
                                 break;
                             case R.id.button_complete:
                                 complete();
-                                getLoaderManager().notifyAll();
                                 break;
                             case R.id.button_forward:
                                 workoutId++;
@@ -139,7 +149,6 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         int currentWorkout = preferences.getInt(Contract.CURRENT_WORKOUT, 1);
         ContentValues contentValues = new ContentValues();
         contentValues.put(Contract.ExerciseEntry.COLUMN_REPS, amrap);
-
         System.out.println(" Lines Completed " + getContext().getContentResolver().update(
                 Contract.makeUriForWorkout(workoutId),
                 null, null, null));
@@ -153,7 +162,7 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("currentWorkout", currentWorkout+1);
         editor.apply();
-        recyclerView.getAdapter().notifyAll();
+        getLoaderManager().restartLoader(workoutId, null, this);
     }
     public void initLoader(int workoutId){
         getLoaderManager().initLoader(workoutId, null, this);

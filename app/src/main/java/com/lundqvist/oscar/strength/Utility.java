@@ -11,6 +11,9 @@ public class Utility {
      *  Brzycki Formula
      */
     public int oneRepMaxCalc(int reps, int weight){
-        return weight*(36/(37-reps));
+        System.out.println("Reps: " +  reps + " Weight: " + weight);
+        float result = (float)weight * 36 / (37 - (float)reps);
+        System.out.println(Math.round(result));
+        return Math.round(result);
     }
 }

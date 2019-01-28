@@ -20,7 +20,7 @@ public class StatsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
         final Utility utility = new Utility();
-        final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        final SharedPreferences prefs = getSharedPreferences(Contract.SHARED_REPFS, MODE_PRIVATE);
 
         final Button saveSquat = findViewById(R.id.button_save_squat);
         final Button saveBench = findViewById(R.id.button_save_bench);
@@ -62,13 +62,13 @@ public class StatsActivity extends AppCompatActivity {
                     weightSquatLayout.setError(null);
                 }
                 if(!reps.isEmpty() && !weight.isEmpty()){
-                    System.out.println("Squat " + "Reps: " + reps + ", Weight: " + weight);
                     int oneRepMax = utility.oneRepMaxCalc(
                             Integer.parseInt(reps),
                             Integer.parseInt(weight)
                     );
+                    System.out.println("oneRepMax " + oneRepMax);
                     SharedPreferences.Editor editor = prefs.edit();
-                    editor.putInt(Contract.RM_SQUAT, oneRepMax);
+                    editor.putInt("squatRM", oneRepMax);
                     editor.apply();
                 }
             }
@@ -88,11 +88,11 @@ public class StatsActivity extends AppCompatActivity {
                     weightBenchLayout.setError(null);
                 }
                 if(!reps.isEmpty() && !weight.isEmpty()){
-                    System.out.println("Squat " + "Reps: " + reps + ", Weight: " + weight);
                     int oneRepMax = utility.oneRepMaxCalc(
                             Integer.parseInt(reps),
                             Integer.parseInt(weight)
                     );
+                    System.out.println("oneRepMax " + oneRepMax);
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putInt(Contract.RM__BENCH, oneRepMax);
                     editor.apply();
@@ -114,11 +114,11 @@ public class StatsActivity extends AppCompatActivity {
                     weightDeadLayout.setError(null);
                 }
                 if(!reps.isEmpty() && !weight.isEmpty()){
-                    System.out.println("Squat " + "Reps: " + reps + ", Weight: " + weight);
                     int oneRepMax = utility.oneRepMaxCalc(
                             Integer.parseInt(reps),
                             Integer.parseInt(weight)
                     );
+                    System.out.println("oneRepMax " + oneRepMax);
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putInt(Contract.RM__DEAD, oneRepMax);
                     editor.apply();
@@ -140,7 +140,6 @@ public class StatsActivity extends AppCompatActivity {
                     weightPressLayout.setError(null);
                 }
                 if(!reps.isEmpty() && !weight.isEmpty()){
-                    System.out.println("Squat " + "Reps: " + reps + ", Weight: " + weight);
                     int oneRepMax = utility.oneRepMaxCalc(
                             Integer.parseInt(reps),
                             Integer.parseInt(weight)
