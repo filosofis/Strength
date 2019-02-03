@@ -28,11 +28,7 @@ public class WorkoutLoader extends CursorLoader {
                 null);
     }
 
-    public static WorkoutLoader getCompletedWorkout(
-            Context context,
-            long from,
-            long to
-    ){
+    public static WorkoutLoader getCompletedWorkout(Context context, long from, long to){
         return new WorkoutLoader(
                 context,
                 Contract.makeUriForCompleted(),
@@ -41,5 +37,4 @@ public class WorkoutLoader extends CursorLoader {
                 new String[]{Long.toString(from), Long.toString(to)},
                 null);
     }
-
 }

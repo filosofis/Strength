@@ -1,5 +1,7 @@
 package com.lundqvist.oscar.strength;
 
+import android.database.Cursor;
+
 public class Utility {
 
     public int calculateVolume(){

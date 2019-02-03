@@ -21,7 +21,9 @@ import android.view.ViewGroup;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.lundqvist.oscar.strength.R;
+import com.lundqvist.oscar.strength.Utility;
 import com.lundqvist.oscar.strength.data.Contract;
+import com.lundqvist.oscar.strength.data.WorkoutAdapter;
 import com.lundqvist.oscar.strength.data.WorkoutLoader;
 
 /**
@@ -38,15 +40,20 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
     private Menu menu;
     private SharedPreferences sharedPref;
     private String amrap;
+    private String name;
+    private int weight;
 
     @Override
-    public void textInputValue(String amrap) {
+    public void textInputValue(String amrap, int weight, String name) {
         this.amrap = amrap;
-        System.out.println("textInputValue  " + amrap);
-        if(amrap.equals("disable")){
+        int cw = sharedPref.getInt("currentWorkout", 1);
+        System.out.println("textInputValue  " + amrap + " WorkoutID : " +workoutId + " "+ cw);
+        if(amrap.equals("disable")) {
             System.out.println("Amrap, disabling complete button");
+            this.weight = weight;
+            this.name = name;
             menu.getItem(1).setEnabled(false);
-        }else if(amrap.length()>0){
+        }else if(amrap.length()>0 && !amrap.equals("notAmrap") && cw == workoutId){
             System.out.println("Amrap > 1, enabling complete button");
             menu.getItem(1).setEnabled(true);
         }
@@ -108,7 +115,7 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         sharedPref = context.getSharedPreferences(Contract.SHARED_REPFS, Context.MODE_PRIVATE);
         workoutId = sharedPref.getInt("currentWorkout", 1);
         //System.out.println("Creating view with workoutID " + workoutId);
-        initLoader(1);
+        initLoader(workoutId);
         bottomNavigationView = rootView.findViewById(R.id.bottom_navigation);
         menu = bottomNavigationView.getMenu();
         menu.getItem(2).setCheckable(false);
@@ -147,13 +154,41 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         System.out.println("AMRAP " + amrap);
         SharedPreferences preferences = getContext().getSharedPreferences(Contract.SHARED_REPFS, Context.MODE_PRIVATE);
         int currentWorkout = preferences.getInt(Contract.CURRENT_WORKOUT, 1);
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(Contract.ExerciseEntry.COLUMN_REPS, amrap);
         System.out.println(" Lines Completed " + getContext().getContentResolver().update(
                 Contract.makeUriForWorkout(workoutId),
                 null, null, null));
 
-        if(amrap!=null) {
+        if(!amrap.equals("notAmrap")) {
+            System.out.println("Completeing AMRAP with weight: " + weight +" and name: " + name);
+            Utility utility = new Utility();
+            int calculatedWeight=0;
+            SharedPreferences.Editor editor = preferences.edit();
+            switch(name){
+                case "Squat":
+                    calculatedWeight = (weight*preferences.getInt(Contract.RM_SQUAT, 1))/100;
+                    editor.putInt("squatRM", utility.oneRepMaxCalc(Integer.parseInt(amrap), calculatedWeight));
+                    break;
+                case "Bench":
+                    calculatedWeight = (weight*preferences.getInt(Contract.RM__BENCH, 1))/100;
+                    utility.oneRepMaxCalc(Integer.parseInt(amrap), calculatedWeight);
+                    editor.putInt("squatRM", utility.oneRepMaxCalc(Integer.parseInt(amrap), calculatedWeight));
+                    break;
+                case "Deadlift":
+                    calculatedWeight = (weight*preferences.getInt(Contract.RM__DEAD, 1))/100;
+                    utility.oneRepMaxCalc(Integer.parseInt(amrap), calculatedWeight);
+                    editor.putInt("squatRM", utility.oneRepMaxCalc(Integer.parseInt(amrap), calculatedWeight));
+                    break;
+                case "Military Press":
+                    calculatedWeight = (weight*preferences.getInt(Contract.RM__PRESS, 1))/100;
+                    utility.oneRepMaxCalc(Integer.parseInt(amrap), calculatedWeight);
+                    editor.putInt("squatRM", utility.oneRepMaxCalc(Integer.parseInt(amrap), calculatedWeight));
+                    break;
+            }
+            editor.apply();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(Contract.ExerciseEntry.COLUMN_REPS, amrap);
+            //Change weight to the actual weight used instead of programmed % to track progression
+            //contentValues.put(Contract.ExerciseEntry.COLUMN_WEIGHT, calculatedWeight);
             System.out.println(" Lines Updated " + getContext().getContentResolver().update(
                     Contract.makeUriForExercise(workoutId),
                     contentValues, null, null));

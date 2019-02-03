@@ -1,4 +1,4 @@
-package com.lundqvist.oscar.strength.ui;
+package com.lundqvist.oscar.strength.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.lundqvist.oscar.strength.R;
-import com.lundqvist.oscar.strength.data.Contract;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -36,7 +34,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
     }
 
     public interface AdapterCallback{
-        void textInputValue(String amrap);
+        void textInputValue(String amrap, int weight, String name);
     }
 
 
@@ -119,8 +117,8 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
                 holder.inputText.setVisibility(View.VISIBLE);
                 holder.repsView.setText(R.string.amrap);
                 amrapResult = holder.inputText.getText().toString();
-                adapterCallback.textInputValue("disable");
-                adapterCallback.textInputValue(amrapResult);
+                adapterCallback.textInputValue("disable", weight, name);
+                //adapterCallback.textInputValue(amrapResult, weight);
                 holder.inputText.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -132,12 +130,13 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
                     public void afterTextChanged(Editable s) {
                         System.out.println("AMRAP result: " + s.toString());
                         amrapResult = s.toString();
-                        adapterCallback.textInputValue(amrapResult);
+                        adapterCallback.textInputValue(amrapResult, 0, null);
                     }
 
                 });
             }else {
                 holder.repsView.setText(repsString);
+                adapterCallback.textInputValue("notAmrap", 0, null);
             }
             if(note.length() > 2){
                 holder.noteView.setText(note);
@@ -149,7 +148,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
                 int calculatedWeight = 1;
                 switch(name){
                     case "Squat":
-                        calculatedWeight = (weight*prefs.getInt("squatRM", 1))/100;
+                        calculatedWeight = (weight*prefs.getInt(Contract.RM_SQUAT, 1))/100;
                         break;
                     case "Bench":
                         calculatedWeight = (weight*prefs.getInt(Contract.RM__BENCH, 1))/100;
