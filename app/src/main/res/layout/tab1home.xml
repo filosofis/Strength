@@ -52,7 +52,6 @@
             android:layout_height="wrap_content"
             style="@style/TextAppearance.AppCompat.Headline"
             />
-
     </LinearLayout>
 
 

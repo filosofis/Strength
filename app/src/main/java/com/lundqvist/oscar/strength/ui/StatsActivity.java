@@ -49,7 +49,6 @@ public class StatsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stats);
         final Utility utility = new Utility();
         final SharedPreferences prefs = getSharedPreferences(Contract.SHARED_REPFS, MODE_PRIVATE);
-
         final Button saveSquat = findViewById(R.id.button_save_squat);
         final Button saveBench = findViewById(R.id.button_save_bench);
         final Button saveDead = findViewById(R.id.button_save_dead);
@@ -189,10 +188,7 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     public void getBodyWeightFromFit(){
-        String bodyweight;
         FitnessOptions fitnessOptions = FitnessOptions.builder()
-                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
                 .addDataType(DataType.TYPE_WEIGHT, FitnessOptions.ACCESS_READ)
                 .build();
         if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), fitnessOptions)) {
@@ -276,13 +272,22 @@ public class StatsActivity extends AppCompatActivity {
                     System.out.println("Type : " + dp.getDataType());
                     System.out.println("Start : " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
                     System.out.println("End : " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
-                    System.out.println("Type : " + dp.getDataType());
                     for (Field field : dp.getDataType().getFields()) {
-                        System.out.println("Field " + field.getName() + " Value: " + dp.getValue(field));
+                        //System.out.println("Field " + field.getName() + " Value: " + dp.getValue(field));
+                        saveBodyWeight(dp.getValue(field).asFloat());
                     }
                 }
             }
         }
+    }
+
+    public void saveBodyWeight(Float weight){
+        //System.out.println("Saving Body weight " + weight);
+        SharedPreferences prefs = getSharedPreferences(Contract.SHARED_REPFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(Contract.CURRENT_BODY_WEIGHT, Math.round(weight));
+        editor.apply();
+
     }
 
     @Override

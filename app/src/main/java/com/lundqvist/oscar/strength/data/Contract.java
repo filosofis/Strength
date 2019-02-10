@@ -28,6 +28,7 @@ public class Contract {
     public static final String RM__BENCH = "benchRM";
     public static final String RM__DEAD = "deadRM";
     public static final String RM__PRESS = "pressRM";
+    public static final String CURRENT_BODY_WEIGHT = "currentBodyWeight";
 
 
     public static final class ExerciseEntry implements BaseColumns {

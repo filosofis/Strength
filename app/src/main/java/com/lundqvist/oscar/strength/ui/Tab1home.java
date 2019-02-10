@@ -62,7 +62,7 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
         chart.invalidate();
         List<Entry> entries = new ArrayList<>();
         List<Entry> secondEntries = new ArrayList<>();
-        List<Entry> thirdEntries = new ArrayList<>();
+        //List<Entry> thirdEntries = new ArrayList<>();
         cursor.moveToFirst();
         int counter=0;
         int reps=0;
