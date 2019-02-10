@@ -8,8 +8,11 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -20,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.lundqvist.oscar.strength.NewAppWidget;
 import com.lundqvist.oscar.strength.R;
 import com.lundqvist.oscar.strength.Utility;
 import com.lundqvist.oscar.strength.data.Contract;
@@ -65,6 +69,8 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         //System.out.println("Load Started");
         return WorkoutLoader.getWorkout(getContext(), id);
     }
+
+
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
@@ -193,13 +199,22 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
                     Contract.makeUriForExercise(workoutId),
                     contentValues, null, null));
         }
-
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("currentWorkout", currentWorkout+1);
         editor.apply();
+        updateWidget();
         getLoaderManager().restartLoader(workoutId, null, this);
     }
     public void initLoader(int workoutId){
         getLoaderManager().initLoader(workoutId, null, this);
+    }
+
+    public void updateWidget(){
+        Intent intent = new Intent(getContext(), NewAppWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(getActivity().getApplication()).getAppWidgetIds(
+                new ComponentName(getActivity().getApplication(), NewAppWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        getActivity().sendBroadcast(intent);
     }
 }

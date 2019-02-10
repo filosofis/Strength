@@ -107,6 +107,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
             holder.weightTitle.setVisibility(View.GONE);
             holder.timeView.setVisibility(View.GONE);
             holder.timeTitle.setVisibility(View.GONE);
+            adapterCallback.textInputValue("notAmrap", 0, null);
         }else {
             holder.nameView.setText(name);
             holder.setsView.setText(sets);

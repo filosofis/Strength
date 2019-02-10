@@ -3,9 +3,16 @@ package com.lundqvist.oscar.strength.ui;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.lundqvist.oscar.strength.NewAppWidget;
 import com.lundqvist.oscar.strength.R;
 import com.lundqvist.oscar.strength.data.Contract;
 import com.lundqvist.oscar.strength.model.Exercise;
@@ -23,6 +31,7 @@ import com.lundqvist.oscar.strength.model.Program;
 
 import java.util.ArrayList;
 
+import androidx.viewpager.widget.ViewPager;
 import timber.log.Timber;
 
 /**
@@ -42,13 +51,10 @@ public class Tab3programs extends Fragment{
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.tab3programs, container, false);
-
         recyclerView = rootView.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-
         rootRef = FirebaseDatabase.getInstance().getReference();
         programsRef = rootRef.child("programs-menu");
         System.out.println("Create View");
@@ -57,7 +63,6 @@ public class Tab3programs extends Fragment{
     @Override
     public void onStart() {
         super.onStart();
-        // TODO: 2018-08-05 Change the names  
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -81,7 +86,10 @@ public class Tab3programs extends Fragment{
                                 null,
                                 null
                         );
-                        insertProgramData(title);
+                        insertProgramData(programArrayList.get(position));
+                        ViewPager vp = getActivity().findViewById(R.id.container);
+                        vp.setCurrentItem(1);
+
                     }
                 });
                 recyclerView.setAdapter(adapter);
@@ -89,14 +97,22 @@ public class Tab3programs extends Fragment{
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         };
         programsRef.addValueEventListener(postListener);
         mPostListener = postListener;
     }
 
-    private void insertProgramData(String title){
+    private void insertProgramData(Program program){
+        String title = program.getTitle();
+        int length = program.getDuration();
+        SharedPreferences prefs = getContext().getSharedPreferences(
+                Contract.SHARED_REPFS,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(Contract.CURRENT_PROGRAM, title);
+        editor.putInt(Contract.CURRENT_LENGTH, length);
+        editor.apply();
         programDataRef = rootRef.child("programs-data").child(title);
         final ArrayList<ContentValues> exerciseCVs = new ArrayList<>();
         programDataRef.addValueEventListener(new ValueEventListener() {
@@ -125,6 +141,14 @@ public class Tab3programs extends Fragment{
                 int entries = getContext().getContentResolver().bulkInsert(Contract.BASE_CONTENT_URI,
                         exerciseCVs.toArray(new ContentValues[exerciseCVs.size()]));
                 System.out.println("Inserted rows: " + entries);
+
+                //Update Widget
+                Intent intent = new Intent(getContext(), NewAppWidget.class);
+                intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                int[] ids = AppWidgetManager.getInstance(getActivity().getApplication()).getAppWidgetIds(
+                        new ComponentName(getActivity().getApplication(), NewAppWidget.class));
+                intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                getActivity().sendBroadcast(intent);
             }
 
             @Override

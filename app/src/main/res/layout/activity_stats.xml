@@ -15,7 +15,7 @@
             style="@style/TextAppearance.AppCompat.Headline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Squat"
+            android:text="@string/squat"
             android:textColor="@color/secondaryTextColor" />
 
         <LinearLayout
@@ -72,7 +72,7 @@
             style="@style/TextAppearance.AppCompat.Headline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bench Press"
+            android:text="@string/benchpress"
             android:textColor="@color/secondaryTextColor" />
 
         <LinearLayout
@@ -129,7 +129,7 @@
             style="@style/TextAppearance.AppCompat.Headline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Deadlift"
+            android:text="@string/deadlift"
             android:textColor="@color/secondaryTextColor" />
 
         <LinearLayout
@@ -186,7 +186,7 @@
             style="@style/TextAppearance.AppCompat.Headline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Military Press"
+            android:text="@string/military_press"
             android:textColor="@color/secondaryTextColor" />
 
         <LinearLayout
@@ -230,6 +230,29 @@
         </LinearLayout>
 
     </LinearLayout>
+    <!--https://stackoverflow.com/questions/5049852/android-drawing-separator-divider-line-in-layout -->
+    <View style="@style/Divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sync_bodyweight"
+            android:textColor="@color/secondaryTextColor" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_load_from_fit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sync" />
+    </LinearLayout>
+
     <!--https://stackoverflow.com/questions/5049852/android-drawing-separator-divider-line-in-layout -->
     <View style="@style/Divider" />
 </LinearLayout>

@@ -4,13 +4,26 @@
     <string name="tab_text_2">Tab 2</string>
     <string name="tab_text_3">Tab 3</string>
 
-    <string name="section_format">Hello World from section: %1$d</string>
+    <!-- home -->
+    <string name="program_title_home">Current Program: </string>
+    <string name="completion">Completion: </string>
+    <string name="days30">30 Days</string>
+    <string name="days60">60 Days</string>
+    <string name="days120">120 Days</string>
+    <string name="oneyear">One Year</string>
 
     <!-- Settings Menu -->
     <string name="action_settings">Settings</string>
     <string name="action_test_data">Insert Test data</string>
     <string name="hint_reps">Reps</string>
     <string name="hint_weight">Weight</string>
+    <string name="hint_bodyweight">Body Weight</string>
+    <string name="sync_bodyweight">Sync Bodyweight with FIT</string>
+    <string name="sync">Sync</string>
+    <string name="military_press">Military Press</string>
+    <string name="deadlift">Deadlift</string>
+    <string name="benchpress">Bench Press</string>
+    <string name="squat">Squat</string>
 
     <!-- Bottom Navication Bar -->
     <string name="back">BACK</string>
@@ -20,6 +33,7 @@
     <!-- Exercise Titles -->
     <string name="sets" translatable="true">Sets:</string>
     <string name="reps" translatable="true">Reps:</string>
+    <string name="bodyweight" translatable="true">Body Weight</string>
     <string name="weight" translatable="true">Weight:</string>
     <string name="note" translatable="true">Note</string>
     <string name="time" translatable="true">Time</string>
@@ -34,5 +48,10 @@
     <string name="hint_text" translatable="true">Amrap Result</string>
 
     <string name="save" translatable="true">save</string>
+
+    <!-- Widget -->
+    <string name="program_title" translatable="true">Program </string>
+    <string name="week_title" translatable="true">Workout Nr </string>
+    <string name="add_widget">Add widget</string>
 
 </resources>

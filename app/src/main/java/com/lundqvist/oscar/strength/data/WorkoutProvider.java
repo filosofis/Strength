@@ -150,7 +150,6 @@ public class WorkoutProvider extends ContentProvider {
      * Fills database with a completed juggernaut program ending yesterday for testing purposes
      * @return number of completed workouts
      */
-    // TODO: 2019-01-17 Generate and put Date for completeion
     private int insertTestData(){
         System.out.println("Attempting to insert Test data....");
         DatabaseReference dbref = FirebaseDatabase.getInstance().getReference()

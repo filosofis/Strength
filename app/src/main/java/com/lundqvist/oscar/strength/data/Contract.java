@@ -22,6 +22,8 @@ public class Contract {
 
     public static final String SHARED_REPFS = "prefs";
     public static final String CURRENT_WORKOUT = "currentWorkout";
+    public static final String CURRENT_PROGRAM = "currentProgram";
+    public static final String CURRENT_LENGTH = "currentLength";
     public static final String RM_SQUAT = "squatRM";
     public static final String RM__BENCH = "benchRM";
     public static final String RM__DEAD = "deadRM";
