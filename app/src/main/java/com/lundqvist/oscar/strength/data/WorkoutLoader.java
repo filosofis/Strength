@@ -34,7 +34,6 @@ public class WorkoutLoader extends CursorLoader {
                 Contract.makeUriForCompleted(),
                 null,
                 null,
-                new String[]{Long.toString(from), Long.toString(to)},
-                null);
+                new String[]{Long.toString(from), Long.toString(to)}, Contract.ExerciseEntry.COLUMN_COMPLETED);
     }
 }

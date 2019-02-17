@@ -1,13 +1,7 @@
 package com.lundqvist.oscar.strength.ui;
 
-
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -28,18 +22,32 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.lundqvist.oscar.strength.NewAppWidget;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.FitnessOptions;
+import com.google.android.gms.fitness.data.Bucket;
+import com.google.android.gms.fitness.data.DataPoint;
+import com.google.android.gms.fitness.data.DataSet;
+import com.google.android.gms.fitness.data.DataType;
+import com.google.android.gms.fitness.data.Field;
+import com.google.android.gms.fitness.request.DataReadRequest;
+import com.google.android.gms.fitness.result.DataReadResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.lundqvist.oscar.strength.R;
 import com.lundqvist.oscar.strength.data.Contract;
 import com.lundqvist.oscar.strength.data.WorkoutLoader;
 
-import org.w3c.dom.Text;
-
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.MODE_PRIVATE;
+import static java.text.DateFormat.getTimeInstance;
 
 
 /**
@@ -47,7 +55,9 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    LineChart chart;
+    private LineChart chart;
+    private List<Entry> bodyWeightEntries = new ArrayList<>();
+    private static final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 1;
 
     @NonNull
     @Override
@@ -62,13 +72,13 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
         chart.invalidate();
         List<Entry> entries = new ArrayList<>();
         List<Entry> secondEntries = new ArrayList<>();
-        //List<Entry> thirdEntries = new ArrayList<>();
         cursor.moveToFirst();
         int counter=0;
         int reps=0;
         int sets;
         int weight=0;
         long date;
+        Calendar cal = Calendar.getInstance();
         if(cursor.getCount()<2){
             chart.setVisibility(View.INVISIBLE);
         }else {
@@ -83,10 +93,13 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
                     }
                     cursor.moveToNext();
                 }
-                //System.out.println("Counter: "+ counter + " reps: " + reps);
-                //System.out.println("Weight : " + weight);
-                secondEntries.add(new Entry(counter, weight * 2));
-                entries.add(new Entry(counter++, reps));
+                System.out.println("Counter: "+ counter + " reps: " + reps);
+                System.out.println("Weight : " + weight);
+                System.out.println("Date : " + date);
+                counter++;
+                cal.setTimeInMillis(date);
+                secondEntries.add(new Entry(date, weight * 2));
+                entries.add(new Entry(date, reps));
                 reps = 0;
             } while (cursor.moveToNext());
 
@@ -98,19 +111,26 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
             LineData lineData2 = new LineData(dataSet2);
             lineData2.setDrawValues(false);
 
-            //dataSet.setFillColor(R.color.secondaryColor);
+            LineDataSet dataSet3 = new LineDataSet(bodyWeightEntries, "Body Weight");
+            LineData lineData3 = new LineData(dataSet3);
+            lineData3.setDrawValues(false);
+
+            dataSet.setFillColor(R.color.secondaryColor);
             dataSet.setColor(ContextCompat.getColor(getContext(), R.color.secondaryLightColor));
             dataSet.setLineWidth(2f);
             dataSet.setDrawCircles(false);
 
+            dataSet3.setColor(ContextCompat.getColor(getContext(), R.color.primaryDarkColor));
+            dataSet3.setLineWidth(2f);
+            dataSet3.setDrawCircles(false);
+
             chart.getXAxis().setDrawGridLines(false);
             chart.getXAxis().setDrawLabels(false);
             chart.getAxisLeft().setDrawGridLines(false);
-            chart.getAxisLeft().setDrawLabels(false);
+            chart.getAxisLeft().setDrawLabels(true);
             chart.getAxisLeft().setDrawZeroLine(true);
             chart.getAxisRight().setDrawGridLines(false);
             chart.getAxisRight().setDrawLabels(false);
-            chart.setData(lineData);
             chart.getDescription().setEnabled(false);
             chart.getLegend().setEnabled(true);
             chart.getLegend().setTextSize(16f);
@@ -118,6 +138,7 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
             ArrayList<ILineDataSet> lineDataSets = new ArrayList<>();
             lineDataSets.add(dataSet);
             lineDataSets.add(dataSet2);
+            lineDataSets.add(dataSet3);
             chart.setData(new LineData(lineDataSets));
             chart.invalidate();
         }
@@ -127,8 +148,6 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -196,7 +215,7 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
             public void onClick(View v) {
                 Calendar cal = Calendar.getInstance();
                 long to = cal.getTimeInMillis();
-                cal.add(Calendar.YEAR, -1);
+                cal.add(Calendar.DAY_OF_YEAR, -7);
                 long from = cal.getTimeInMillis();
                 getWorkout(from, to, 4);
             }
@@ -204,12 +223,106 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
         return rootView;
     }
 
-    public void getWorkout(long from, long to, int id){
+    private void getWorkout(long from, long to, int id){
         System.out.println("From " + from + " to" + to);
         Bundle args= new Bundle();
         args.putLong("from", from);
         args.putLong("to", to);
+        getBodyWeightFromFit(from, to);
         getLoaderManager().initLoader(id, args, this);
+    }
 
+    public void getBodyWeightFromFit(long from, long to){
+        FitnessOptions fitnessOptions = FitnessOptions.builder()
+                .addDataType(DataType.TYPE_WEIGHT, FitnessOptions.ACCESS_READ)
+                .build();
+        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(getContext()), fitnessOptions)) {
+            GoogleSignIn.requestPermissions(
+                    this, // your activity
+                    GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
+                    GoogleSignIn.getLastSignedInAccount(getContext()),
+                    fitnessOptions);
+        } else {
+            System.out.println("Accessing Google Fit....");
+            accessGoogleFit(from, to);
+        }
+    }
+
+    private void accessGoogleFit(long from, long to){
+        /*DataReadRequest readRequest = new DataReadRequest.Builder()
+                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                .bucketByTime(1, TimeUnit.DAYS)
+                .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
+                .build();
+        */
+        DataReadRequest readRequest = new DataReadRequest.Builder()
+                .read(DataType.TYPE_WEIGHT)
+                .bucketByTime(1, TimeUnit.DAYS)
+                .setTimeRange(from, to, TimeUnit.MILLISECONDS)
+                .build();
+        Fitness.getHistoryClient(getActivity(), GoogleSignIn.getLastSignedInAccount(getContext()))
+                .readData(readRequest)
+                .addOnSuccessListener(new OnSuccessListener<DataReadResponse>() {
+                    @Override
+                    public void onSuccess(DataReadResponse dataReadResponse) {
+                        System.out.println("onSucess()");
+                        printFitHistory(dataReadResponse);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("onFailure()" + e);
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<DataReadResponse>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataReadResponse> task) {
+                        System.out.println("onComplete()");
+                    }
+                });
+    }
+
+    private void printFitHistory(DataReadResponse response){
+        DateFormat dateFormat = getTimeInstance();
+        List<Entry> entries = new ArrayList<>();
+        if (response.getBuckets().size() > 0) {
+            System.out.println("Nr of Buckets: " + response.getBuckets().size());
+            int counter = 0;
+            for (Bucket bucket : response.getBuckets()) {
+                List<DataSet> dataSets = bucket.getDataSets();
+                counter++;
+                for(DataSet dataSet : dataSets){
+                    for (DataPoint dp : dataSet.getDataPoints()) {
+                        System.out.println("Type : " + dp.getDataType());
+                        System.out.println("Start : " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
+                        System.out.println("End : " + dp.getEndTime(TimeUnit.MILLISECONDS));
+                        System.out.println("Type : " + dp.getDataType());
+                        for (Field field : dp.getDataType().getFields()) {
+                            System.out.println(
+                                    "Field " + field.getName()
+                                    + " Value: " + dp.getValue(field)
+                                            + "Counter: "  + counter);
+                            entries.add(new Entry(dp.getStartTime(TimeUnit.MILLISECONDS), dp.getValue(field).asFloat()));
+                        }
+                    }
+                }
+            }
+            this.bodyWeightEntries = entries;
+
+        }else if(response.getDataSets().size() > 0){
+            System.out.println("Single Bucket");
+            for (DataSet dataSet : response.getDataSets()) {
+                for (DataPoint dp : dataSet.getDataPoints()) {
+                    System.out.println("Type : " + dp.getDataType());
+                    System.out.println("Start : " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
+                    System.out.println("End : " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
+                    for (Field field : dp.getDataType().getFields()) {
+                        //System.out.println("Field " + field.getName() + " Value: " + dp.getValue(field));
+                        //dp.getValue(field).asFloat();
+                    }
+                }
+            }
+        }
     }
 }

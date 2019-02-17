@@ -184,7 +184,7 @@ public class WorkoutProvider extends ContentProvider {
                     cv.put(Contract.ExerciseEntry.COLUMN_REPS, exercise.getReps());
 
                     cal.setTimeInMillis(now);
-                    dateDelta = -113+exercise.getWorkout();
+                    dateDelta = -114+exercise.getWorkout();
                     cal.add(Calendar.DAY_OF_YEAR, dateDelta);
                     cv.put(Contract.ExerciseEntry.COLUMN_COMPLETED, cal.getTimeInMillis());
                     exerciseCVs.add(cv);
