@@ -72,10 +72,6 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
         return WorkoutLoader.getCompletedWorkout(getContext(), from, to);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
