@@ -21,6 +21,7 @@ public class Contract {
     public static final String REST_DAY = "rest";
 
     public static final String SHARED_REPFS = "prefs";
+    public static final String FIRST_RUN = "firstRun";
     public static final String CURRENT_WORKOUT = "currentWorkout";
     public static final String CURRENT_PROGRAM = "currentProgram";
     public static final String CURRENT_LENGTH = "currentLength";
@@ -28,7 +29,6 @@ public class Contract {
     public static final String RM__BENCH = "benchRM";
     public static final String RM__DEAD = "deadRM";
     public static final String RM__PRESS = "pressRM";
-    public static final String CURRENT_BODY_WEIGHT = "currentBodyWeight";
 
 
     public static final class ExerciseEntry implements BaseColumns {

@@ -1,5 +1,6 @@
 package com.lundqvist.oscar.strength.ui;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
+import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -57,29 +60,34 @@ import static java.text.DateFormat.getTimeInstance;
 public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private LineChart chart;
     private List<Entry> bodyWeightEntries = new ArrayList<>();
+    private List<Entry> volumeEntries = new ArrayList<>();
+    private List<Entry> intensityEntries = new ArrayList<>();
     private static final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 1;
 
     @NonNull
     @Override
-    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         long from = args.getLong("from",0);
         long to = args.getLong("to",0);
         return WorkoutLoader.getCompletedWorkout(getContext(), from, to);
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
-        chart.invalidate();
         List<Entry> entries = new ArrayList<>();
         List<Entry> secondEntries = new ArrayList<>();
         cursor.moveToFirst();
-        int counter=0;
         int reps=0;
         int sets;
         int weight=0;
         long date;
         Calendar cal = Calendar.getInstance();
-        if(cursor.getCount()<2){
+        if(cursor.getCount()==0){
             chart.setVisibility(View.INVISIBLE);
         }else {
             chart.setVisibility(View.VISIBLE);
@@ -93,60 +101,25 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
                     }
                     cursor.moveToNext();
                 }
-                System.out.println("Counter: "+ counter + " reps: " + reps);
-                System.out.println("Weight : " + weight);
-                System.out.println("Date : " + date);
-                counter++;
                 cal.setTimeInMillis(date);
-                secondEntries.add(new Entry(date, weight * 2));
+                //While displaying intensity 0 for rest days is accurate, it makes the chart ugly
+                //Not completely sure how I want to deal with this
+                if(weight != 0) {
+                    secondEntries.add(new Entry(date, weight * 2));
+                }
                 entries.add(new Entry(date, reps));
                 reps = 0;
+                weight = 0;
             } while (cursor.moveToNext());
 
-            LineDataSet dataSet = new LineDataSet(entries, "Volume");
-            LineData lineData = new LineData(dataSet);
-            lineData.setDrawValues(false);
-
-            LineDataSet dataSet2 = new LineDataSet(secondEntries, "Intensity");
-            LineData lineData2 = new LineData(dataSet2);
-            lineData2.setDrawValues(false);
-
-            LineDataSet dataSet3 = new LineDataSet(bodyWeightEntries, "Body Weight");
-            LineData lineData3 = new LineData(dataSet3);
-            lineData3.setDrawValues(false);
-
-            dataSet.setFillColor(R.color.secondaryColor);
-            dataSet.setColor(ContextCompat.getColor(getContext(), R.color.secondaryLightColor));
-            dataSet.setLineWidth(2f);
-            dataSet.setDrawCircles(false);
-
-            dataSet3.setColor(ContextCompat.getColor(getContext(), R.color.primaryDarkColor));
-            dataSet3.setLineWidth(2f);
-            dataSet3.setDrawCircles(false);
-
-            chart.getXAxis().setDrawGridLines(false);
-            chart.getXAxis().setDrawLabels(false);
-            chart.getAxisLeft().setDrawGridLines(false);
-            chart.getAxisLeft().setDrawLabels(true);
-            chart.getAxisLeft().setDrawZeroLine(true);
-            chart.getAxisRight().setDrawGridLines(false);
-            chart.getAxisRight().setDrawLabels(false);
-            chart.getDescription().setEnabled(false);
-            chart.getLegend().setEnabled(true);
-            chart.getLegend().setTextSize(16f);
-
-            ArrayList<ILineDataSet> lineDataSets = new ArrayList<>();
-            lineDataSets.add(dataSet);
-            lineDataSets.add(dataSet2);
-            lineDataSets.add(dataSet3);
-            chart.setData(new LineData(lineDataSets));
-            chart.invalidate();
+            this.volumeEntries = entries;
+            this.intensityEntries = secondEntries;
+            updateChart();
         }
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-
     }
 
     @Override
@@ -154,12 +127,31 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
         View rootView = inflater.inflate(R.layout.tab1home, container, false);
         Button button2 = rootView.findViewById(R.id.button2);
         this.chart = rootView.findViewById(R.id.chart);
+        SharedPreferences prefs = getContext().getSharedPreferences(Contract.SHARED_REPFS, MODE_PRIVATE);
+
+        //Ask the user for 1RM's first
+        if(prefs.getBoolean(Contract.FIRST_RUN, true)){
+            Intent intent = new Intent(getActivity(), StatsActivity.class);
+            startActivity(intent);
+        }
 
         TextView currentProgramText = rootView.findViewById(R.id.currentProgramText);
         TextView currentCompletion = rootView.findViewById(R.id.currentCompletion);
-        SharedPreferences prefs = getContext().getSharedPreferences(Contract.SHARED_REPFS, MODE_PRIVATE);
+        TextView rmSquat = rootView.findViewById(R.id.rmSquat);
+        TextView rmBench = rootView.findViewById(R.id.rmBench);
+        TextView rmDead = rootView.findViewById(R.id.rmDead);
+        TextView rmPress = rootView.findViewById(R.id.rmPress);
+
+        rmSquat.setText(String.valueOf(prefs.getInt(Contract.RM_SQUAT, 0)));
+        rmBench.setText(String.valueOf(prefs.getInt(Contract.RM__BENCH, 0)));
+        rmDead.setText(String.valueOf(prefs.getInt(Contract.RM__DEAD, 0)));
+        rmPress.setText(String.valueOf(prefs.getInt(Contract.RM__PRESS, 0)));
+
         String title = prefs.getString(Contract.CURRENT_PROGRAM, "No Active Program");
         int currentWorkout = prefs.getInt(Contract.CURRENT_WORKOUT, 1);
+        //Current workout is always 1 ahead of completed
+        currentWorkout = currentWorkout-1;
+        //Program Lengths are defined in weeks *7 to get days
         int currentLength = prefs.getInt(Contract.CURRENT_LENGTH, 0)*7;
         String completion = String.valueOf(currentWorkout) + " / " + String.valueOf(currentLength);
 
@@ -215,7 +207,7 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
             public void onClick(View v) {
                 Calendar cal = Calendar.getInstance();
                 long to = cal.getTimeInMillis();
-                cal.add(Calendar.DAY_OF_YEAR, -7);
+                cal.add(Calendar.YEAR, -1);
                 long from = cal.getTimeInMillis();
                 getWorkout(from, to, 4);
             }
@@ -223,16 +215,59 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
         return rootView;
     }
 
+    private void updateChart(){
+
+        LineDataSet dataSet = new LineDataSet(this.volumeEntries, "Volume");
+        LineData lineData = new LineData(dataSet);
+        lineData.setDrawValues(false);
+
+        LineDataSet dataSet2 = new LineDataSet(this.intensityEntries, "Intensity");
+        LineData lineData2 = new LineData(dataSet2);
+        lineData2.setDrawValues(false);
+
+        LineDataSet dataSet3 = new LineDataSet(this.bodyWeightEntries, "Body Weight");
+        LineData lineData3 = new LineData(dataSet3);
+        lineData3.setDrawValues(false);
+
+        dataSet.setFillColor(R.color.secondaryColor);
+        dataSet.setColor(ContextCompat.getColor(getContext(), R.color.secondaryLightColor));
+        dataSet.setLineWidth(2f);
+        dataSet.setDrawCircles(false);
+
+        dataSet3.setColor(ContextCompat.getColor(getContext(), R.color.primaryDarkColor));
+        dataSet3.setLineWidth(2f);
+        dataSet3.setDrawCircles(false);
+        dataSet3.setAxisDependency(YAxis.AxisDependency.RIGHT);
+
+        chart.getXAxis().setDrawGridLines(false);
+        chart.getXAxis().setDrawLabels(false);
+        chart.getAxisLeft().setDrawGridLines(false);
+        chart.getAxisLeft().setDrawLabels(false);
+        chart.getAxisLeft().setDrawZeroLine(true);
+        chart.getAxisRight().setDrawGridLines(false);
+        chart.getAxisRight().setDrawLabels(true);
+        chart.getDescription().setEnabled(false);
+        chart.getLegend().setEnabled(true);
+        chart.getLegend().setTextSize(16f);
+
+        ArrayList<ILineDataSet> lineDataSets = new ArrayList<>();
+        lineDataSets.add(dataSet);
+        lineDataSets.add(dataSet2);
+        lineDataSets.add(dataSet3);
+        chart.setData(new LineData(lineDataSets));
+        chart.invalidate();
+    }
+
     private void getWorkout(long from, long to, int id){
         System.out.println("From " + from + " to" + to);
         Bundle args= new Bundle();
         args.putLong("from", from);
         args.putLong("to", to);
-        getBodyWeightFromFit(from, to);
         getLoaderManager().initLoader(id, args, this);
+        getBodyWeightFromFit(from, to);
     }
 
-    public void getBodyWeightFromFit(long from, long to){
+    private void getBodyWeightFromFit(long from, long to){
         FitnessOptions fitnessOptions = FitnessOptions.builder()
                 .addDataType(DataType.TYPE_WEIGHT, FitnessOptions.ACCESS_READ)
                 .build();
@@ -249,12 +284,6 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
     }
 
     private void accessGoogleFit(long from, long to){
-        /*DataReadRequest readRequest = new DataReadRequest.Builder()
-                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
-                .bucketByTime(1, TimeUnit.DAYS)
-                .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
-                .build();
-        */
         DataReadRequest readRequest = new DataReadRequest.Builder()
                 .read(DataType.TYPE_WEIGHT)
                 .bucketByTime(1, TimeUnit.DAYS)
@@ -294,21 +323,22 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
                 counter++;
                 for(DataSet dataSet : dataSets){
                     for (DataPoint dp : dataSet.getDataPoints()) {
-                        System.out.println("Type : " + dp.getDataType());
+                        /*System.out.println("Type : " + dp.getDataType());
                         System.out.println("Start : " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
                         System.out.println("End : " + dp.getEndTime(TimeUnit.MILLISECONDS));
-                        System.out.println("Type : " + dp.getDataType());
+                        System.out.println("Type : " + dp.getDataType());*/
                         for (Field field : dp.getDataType().getFields()) {
-                            System.out.println(
+                            /*System.out.println(
                                     "Field " + field.getName()
                                     + " Value: " + dp.getValue(field)
-                                            + "Counter: "  + counter);
+                                            + "Counter: "  + counter);*/
                             entries.add(new Entry(dp.getStartTime(TimeUnit.MILLISECONDS), dp.getValue(field).asFloat()));
                         }
                     }
                 }
             }
             this.bodyWeightEntries = entries;
+            updateChart();
 
         }else if(response.getDataSets().size() > 0){
             System.out.println("Single Bucket");

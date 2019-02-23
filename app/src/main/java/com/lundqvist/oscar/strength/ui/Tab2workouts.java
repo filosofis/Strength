@@ -66,7 +66,7 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        //System.out.println("Load Started");
+        System.out.println("Load Started");
         return WorkoutLoader.getWorkout(getContext(), id);
     }
 
@@ -88,7 +88,7 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         /*if(workoutAdapter.hasAmrap){
             System.out.println("Yup it has an AMRAP");
         }*/
-        if(workoutId == currentWorkout){
+        if(workoutId == currentWorkout && cursor.getCount() != 0){
             completeButton.setEnabled(true);
         }else{
             completeButton.setEnabled(false);

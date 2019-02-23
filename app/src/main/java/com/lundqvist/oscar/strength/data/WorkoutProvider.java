@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,12 +21,8 @@ import com.lundqvist.oscar.strength.model.Exercise;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.function.ToDoubleBiFunction;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import timber.log.Timber;
-
 /**
  * Created by Oscar on 2018-02-05.
  */
@@ -198,7 +195,7 @@ public class WorkoutProvider extends ContentProvider {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Getting Post failed, log a message
-                Timber.w(databaseError.toException(), "loadPost:onCancelled");
+                Log.w("", "onCancelled: ", databaseError.toException());
                 // [START_EXCLUDE]
                 System.out.println("Failed to load post");
                 // [END_EXCLUDE]

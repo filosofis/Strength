@@ -5,6 +5,18 @@
     android:orientation="vertical"
     android:paddingTop="@dimen/appbar_padding_top">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Headline"
+        android:text="@string/one_rep_max_calc"
+        android:padding="16dp"
+       />
+
+    <!--https://stackoverflow.com/questions/5049852/android-drawing-separator-divider-line-in-layout -->
+    <View style="@style/Divider" />
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

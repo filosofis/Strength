@@ -1,48 +1,21 @@
 package com.lundqvist.oscar.strength.ui;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import timber.log.Timber;
-
-import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.renderscript.Element;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.fitness.Fitness;
-import com.google.android.gms.fitness.FitnessOptions;
-import com.google.android.gms.fitness.data.Bucket;
-import com.google.android.gms.fitness.data.DataPoint;
-import com.google.android.gms.fitness.data.DataSet;
-import com.google.android.gms.fitness.data.DataType;
-import com.google.android.gms.fitness.data.Field;
-import com.google.android.gms.fitness.request.DataReadRequest;
-import com.google.android.gms.fitness.result.DataReadResponse;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.lundqvist.oscar.strength.R;
 import com.lundqvist.oscar.strength.Utility;
 import com.lundqvist.oscar.strength.data.Contract;
 
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static java.text.DateFormat.getTimeInstance;
 
 public class StatsActivity extends AppCompatActivity {
-    private static final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +47,16 @@ public class StatsActivity extends AppCompatActivity {
         final TextInputLayout weightDeadLayout = findViewById(R.id.weightDeadLayout);
         final TextInputLayout weightPressLayout = findViewById(R.id.weightPressLayout);
 
+        if(prefs.getBoolean(Contract.FIRST_RUN, true)){
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean(Contract.FIRST_RUN, false);
+            editor.apply();
+            Toast.makeText(
+                    getBaseContext(),
+                    "Lets start by entering your current best lifts", Toast.LENGTH_LONG)
+                    .show();
+        }
+
         saveSquat.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 String reps = repSquat.getText().toString();
@@ -97,6 +80,9 @@ public class StatsActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putInt("squatRM", oneRepMax);
                     editor.apply();
+                    Toast toast = Toast.makeText(getBaseContext(), "Saved 1RM Squat " + oneRepMax, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP, 0, 0);
+                    toast.show();
                 }
             }
         });
@@ -123,6 +109,9 @@ public class StatsActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putInt(Contract.RM__BENCH, oneRepMax);
                     editor.apply();
+                    Toast toast = Toast.makeText(getBaseContext(), "Saved 1RM Bench " + oneRepMax, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP, 0, 0);
+                    toast.show();
                 }
             }
         });
@@ -149,6 +138,9 @@ public class StatsActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putInt(Contract.RM__DEAD, oneRepMax);
                     editor.apply();
+                    Toast toast = Toast.makeText(getBaseContext(), "Saved 1RM Dead " + oneRepMax, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP, 0, 0);
+                    toast.show();
                 }
             }
         });
@@ -174,6 +166,9 @@ public class StatsActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putInt(Contract.RM__PRESS, oneRepMax);
                     editor.apply();
+                    Toast toast = Toast.makeText(getBaseContext(), "Saved 1RM Military Press " + oneRepMax, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP, 0, 0);
+                    toast.show();
                 }
             }
         });
