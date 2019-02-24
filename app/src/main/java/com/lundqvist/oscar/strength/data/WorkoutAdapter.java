@@ -39,22 +39,22 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        public TextView nameView;
-        public TextView setsView;
-        public TextView repsView;
-        public TextView weightView;
-        public TextView noteView;
-        public TextView completedView;
-        public TextView timeView;
-        public TextView setsTitle;
-        public TextView repsTitle;
-        public TextView weightTitle;
-        public TextView timeTitle;
-        public TextView completeTitle;
-        public TextInputEditText inputText;
-        public TextInputLayout inputLayout;
+        private TextView nameView;
+        private TextView setsView;
+        private TextView repsView;
+        private TextView weightView;
+        private TextView noteView;
+        private TextView completedView;
+        private TextView timeView;
+        private TextView setsTitle;
+        private TextView repsTitle;
+        private TextView weightTitle;
+        private TextView timeTitle;
+        private TextView completeTitle;
+        private TextInputEditText inputText;
+        private TextInputLayout inputLayout;
 
-        public ViewHolder(@NonNull View itemView) {
+        private ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameView = itemView.findViewById(R.id.nameView);
             setsView = itemView.findViewById(R.id.setsView);

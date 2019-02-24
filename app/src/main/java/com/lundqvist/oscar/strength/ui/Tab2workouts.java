@@ -21,6 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.lundqvist.oscar.strength.NewAppWidget;
@@ -70,8 +72,6 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         return WorkoutLoader.getWorkout(getContext(), id);
     }
 
-
-
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         //System.out.println("Load Finished");
@@ -105,10 +105,27 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         }
     }
 
+    private void runLayoutAnimation(final RecyclerView recyclerView, boolean right) {
+        //System.out.println("Attempting to animate...");
+        final Context context = recyclerView.getContext();
+        int animationId;
+        if(right){
+            //System.out.println("Slide right");
+            animationId = R.anim.layout_animation_slide_right;
+        }else{
+            //System.out.println("Slide left");
+            animationId = R.anim.layout_animation_slide_left;
+        }
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, animationId);
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.scheduleLayoutAnimation();
+    }
+
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         recyclerView.setAdapter(null);
-        System.out.println("Load Reset");
+        //System.out.println("Load Reset");
     }
 
     @Override
@@ -117,6 +134,9 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         recyclerView = rootView.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
+        int resId = R.anim.layout_animation_slide_right;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), resId);
+        recyclerView.setLayoutAnimation(animation);
         Context context = getContext();
         sharedPref = context.getSharedPreferences(Contract.SHARED_REPFS, Context.MODE_PRIVATE);
         workoutId = sharedPref.getInt("currentWorkout", 1);
@@ -136,17 +156,20 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
                                     workoutId--;
                                     System.out.println("Back " + workoutId);
                                     initLoader(workoutId);
+                                    runLayoutAnimation(recyclerView, false);
                                 }else{
                                     System.out.println("Back wall");
                                 }
                                 break;
                             case R.id.button_complete:
                                 complete();
+                                //runLayoutAnimation(recyclerView);
                                 break;
                             case R.id.button_forward:
                                 workoutId++;
                                 System.out.println("Forward " + workoutId);
                                 initLoader(workoutId);
+                                runLayoutAnimation(recyclerView, true);
                                 break;
                             }
                             return true;
@@ -205,11 +228,11 @@ public class Tab2workouts extends Fragment implements LoaderManager.LoaderCallba
         updateWidget();
         getLoaderManager().restartLoader(workoutId, null, this);
     }
-    public void initLoader(int workoutId){
+    private void initLoader(int workoutId){
         getLoaderManager().initLoader(workoutId, null, this);
     }
 
-    public void updateWidget(){
+    private void updateWidget(){
         Intent intent = new Intent(getContext(), NewAppWidget.class);
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         int[] ids = AppWidgetManager.getInstance(getActivity().getApplication()).getAppWidgetIds(

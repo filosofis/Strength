@@ -15,16 +15,8 @@
     <string name="projection" translatable="true">Projected 1RM</string>
 
     <!-- Settings Menu -->
-    <string name="one_rep_max_calc" translatable="true">One Rep Max Calculator</string>
     <string name="action_settings" translatable="true">1RM Calculator</string>
     <string name="action_test_data">Insert Test data</string>
-    <string name="hint_reps" translatable="true">Reps</string>
-    <string name="hint_weight" translatable="true">Weight</string>
-    <string name="hint_bodyweight" translatable="true">Body Weight</string>
-    <string name="military_press">Military Press</string>
-    <string name="deadlift">Deadlift</string>
-    <string name="benchpress">Bench Press</string>
-    <string name="squat">Squat</string>
 
     <!-- Bottom Navication Bar -->
     <string name="back">BACK</string>
@@ -55,4 +47,19 @@
     <string name="week_title" translatable="true">Workout Nr </string>
     <string name="add_widget">Add widget</string>
 
+    <!-- Stats Activity -->
+    <string name="first_run_toast">Lets start by entering your current best lifts</string>
+    <string name="save_squat">Saved 1RM Squat</string>
+    <string name="save_bench">Saved 1RM Bench</string>
+    <string name="save_dead">Saved 1RM Dead</string>
+    <string name="save_press">Saved 1RM Military Press</string>
+    <string name="error_not_empty">not empty</string>
+    <string name="hint_reps" translatable="true">Reps</string>
+    <string name="hint_weight" translatable="true">Weight</string>
+    <string name="hint_bodyweight" translatable="true">Body Weight</string>
+    <string name="military_press">Military Press</string>
+    <string name="deadlift">Deadlift</string>
+    <string name="benchpress">Bench Press</string>
+    <string name="squat">Squat</string>
+    <string name="one_rep_max_calc" translatable="true">One Rep Max Calculator</string>
 </resources>

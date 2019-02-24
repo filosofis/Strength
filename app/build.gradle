@@ -9,7 +9,7 @@ android {
         config {
             keyAlias 'key0'
             keyPassword 'EIFFEL65'
-            storeFile file('/home/oscar/strengthKey')
+            storeFile file("$rootDir/strengthKey")
             storePassword 'EIFFEL65'
         }
     }

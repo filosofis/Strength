@@ -3,6 +3,7 @@ package com.lundqvist.oscar.strength.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -110,7 +111,9 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
 
             this.volumeEntries = entries;
             this.intensityEntries = secondEntries;
-            updateChart();
+            //updateChart();
+            uninspiredAsyncTask task = new uninspiredAsyncTask();
+            task.execute();
         }
     }
 
@@ -211,6 +214,68 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
         return rootView;
     }
 
+    /*
+        A total afterthougt, I thought I had checked this requirement with the loaders.
+        Didn't notice they were separate requirements.
+     */
+    private class uninspiredAsyncTask extends AsyncTask<String, String, ArrayList<ILineDataSet> >{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected ArrayList<ILineDataSet> doInBackground(String... strings) {
+            LineDataSet dataSet = new LineDataSet(volumeEntries, "Volume");
+            LineData lineData = new LineData(dataSet);
+            lineData.setDrawValues(false);
+
+            LineDataSet dataSet2 = new LineDataSet(intensityEntries, "Intensity");
+            LineData lineData2 = new LineData(dataSet2);
+            lineData2.setDrawValues(false);
+
+            LineDataSet dataSet3 = new LineDataSet(bodyWeightEntries, "Body Weight");
+            LineData lineData3 = new LineData(dataSet3);
+            lineData3.setDrawValues(false);
+
+            dataSet.setFillColor(R.color.secondaryColor);
+            dataSet.setColor(ContextCompat.getColor(getContext(), R.color.secondaryLightColor));
+            dataSet.setLineWidth(2f);
+            dataSet.setDrawCircles(false);
+
+            dataSet3.setColor(ContextCompat.getColor(getContext(), R.color.primaryDarkColor));
+            dataSet3.setLineWidth(2f);
+            dataSet3.setDrawCircles(false);
+            dataSet3.setAxisDependency(YAxis.AxisDependency.RIGHT);
+
+            chart.getXAxis().setDrawGridLines(false);
+            chart.getXAxis().setDrawLabels(false);
+            chart.getAxisLeft().setDrawGridLines(false);
+            chart.getAxisLeft().setDrawLabels(false);
+            chart.getAxisLeft().setDrawZeroLine(true);
+            chart.getAxisRight().setDrawGridLines(false);
+            chart.getAxisRight().setDrawLabels(true);
+            chart.getDescription().setEnabled(false);
+            chart.getLegend().setEnabled(true);
+            chart.getLegend().setTextSize(16f);
+
+            ArrayList<ILineDataSet> lineDataSets = new ArrayList<>();
+            lineDataSets.add(dataSet);
+            lineDataSets.add(dataSet2);
+            lineDataSets.add(dataSet3);
+
+            return lineDataSets;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<ILineDataSet> lineDataSets) {
+            super.onPostExecute(lineDataSets);
+            chart.setData(new LineData(lineDataSets));
+            chart.invalidate();
+        }
+    }
+
+    /* Replaced by uninspiredAsyncTask for Data Persistence requirement nr 2
     private void updateChart(){
 
         LineDataSet dataSet = new LineDataSet(this.volumeEntries, "Volume");
@@ -253,6 +318,7 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
         chart.setData(new LineData(lineDataSets));
         chart.invalidate();
     }
+    */
 
     private void getWorkout(long from, long to, int id){
         System.out.println("From " + from + " to" + to);
@@ -334,7 +400,7 @@ public class Tab1home extends Fragment implements LoaderManager.LoaderCallbacks<
                 }
             }
             this.bodyWeightEntries = entries;
-            updateChart();
+            //updateChart();
 
         }else if(response.getDataSets().size() > 0){
             System.out.println("Single Bucket");

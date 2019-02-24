@@ -53,7 +53,7 @@ public class StatsActivity extends AppCompatActivity {
             editor.apply();
             Toast.makeText(
                     getBaseContext(),
-                    "Lets start by entering your current best lifts", Toast.LENGTH_LONG)
+                    getString(R.string.first_run_toast), Toast.LENGTH_LONG)
                     .show();
         }
 
@@ -62,12 +62,12 @@ public class StatsActivity extends AppCompatActivity {
                 String reps = repSquat.getText().toString();
                 String weight = weightSquat.getText().toString();
                 if(reps.isEmpty()){
-                    repSquatLayout.setError("not empty");
+                    repSquatLayout.setError(getString(R.string.error_not_empty));
                 }else{
                     repSquatLayout.setError(null);
                 }
                 if(weight.isEmpty()){
-                    weightSquatLayout.setError("not empty");
+                    weightSquatLayout.setError(getString(R.string.error_not_empty));
                 }else{
                     weightSquatLayout.setError(null);
                 }
@@ -80,7 +80,7 @@ public class StatsActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putInt("squatRM", oneRepMax);
                     editor.apply();
-                    Toast toast = Toast.makeText(getBaseContext(), "Saved 1RM Squat " + oneRepMax, Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getBaseContext(), getString(R.string.save_squat) + oneRepMax, Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.TOP, 0, 0);
                     toast.show();
                 }
@@ -91,12 +91,12 @@ public class StatsActivity extends AppCompatActivity {
                 String reps = repBench.getText().toString();
                 String weight = weightBench.getText().toString();
                 if(reps.isEmpty()){
-                    repBenchLayout.setError("not empty");
+                    repBenchLayout.setError(getString(R.string.error_not_empty));
                 }else{
                     repBenchLayout.setError(null);
                 }
                 if(weight.isEmpty()){
-                    weightBenchLayout.setError("not empty");
+                    weightBenchLayout.setError(getString(R.string.error_not_empty));
                 }else{
                     weightBenchLayout.setError(null);
                 }
@@ -109,7 +109,7 @@ public class StatsActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putInt(Contract.RM__BENCH, oneRepMax);
                     editor.apply();
-                    Toast toast = Toast.makeText(getBaseContext(), "Saved 1RM Bench " + oneRepMax, Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getBaseContext(), getString(R.string.save_bench) + oneRepMax, Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.TOP, 0, 0);
                     toast.show();
                 }
@@ -138,7 +138,7 @@ public class StatsActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putInt(Contract.RM__DEAD, oneRepMax);
                     editor.apply();
-                    Toast toast = Toast.makeText(getBaseContext(), "Saved 1RM Dead " + oneRepMax, Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getBaseContext(), getString(R.string.save_dead) + oneRepMax, Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.TOP, 0, 0);
                     toast.show();
                 }
@@ -149,12 +149,12 @@ public class StatsActivity extends AppCompatActivity {
                 String reps = repPress.getText().toString();
                 String weight = weightPress.getText().toString();
                 if(reps.isEmpty()){
-                    repPressLayout.setError("not empty");
+                    repPressLayout.setError(getString(R.string.error_not_empty));
                 }else{
                     repPressLayout.setError(null);
                 }
                 if(weight.isEmpty()){
-                    weightPressLayout.setError("not empty");
+                    weightPressLayout.setError(getString(R.string.error_not_empty));
                 }else{
                     weightPressLayout.setError(null);
                 }
@@ -166,7 +166,7 @@ public class StatsActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putInt(Contract.RM__PRESS, oneRepMax);
                     editor.apply();
-                    Toast toast = Toast.makeText(getBaseContext(), "Saved 1RM Military Press " + oneRepMax, Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getBaseContext(), getString(R.string.save_press) + oneRepMax, Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.TOP, 0, 0);
                     toast.show();
                 }
